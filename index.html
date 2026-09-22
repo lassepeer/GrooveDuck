@@ -1,0 +1,3877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#FFFFFF" />
+  <title>GrooveDuck.app — The Ideal Assistent For Every DJ</title>
+  <meta name="description" content="GrooveDuck.app — the ideal DJ assistant for building smoother, smarter sets from your Rekordbox library." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Intel+One+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --text: #000000;
+      --background: #FFFFFF;
+      --primary: #FADB34;
+      --secondary: #FFA81E;
+      --accent: #FDB4A8;
+      --gray: #E6E7E7;
+      --brown: #B37542;
+      --green: #325A3C;
+      --ink-80: rgba(0,0,0,.80);
+      --ink-64: rgba(0,0,0,.64);
+      --ink-48: rgba(0,0,0,.48);
+      --ink-24: rgba(0,0,0,.24);
+      --ink-12: rgba(0,0,0,.12);
+      --ink-08: rgba(0,0,0,.08);
+      --yellow-soft: rgba(250,219,52,.24);
+      --orange-soft: rgba(255,168,30,.20);
+      --pink-soft: rgba(253,180,168,.24);
+      --radius: 20px;
+      --radius-sm: 14px;
+      --shadow: 0 18px 50px rgba(0,0,0,.09);
+      --shadow-soft: 0 9px 28px rgba(0,0,0,.07);
+      --ease: cubic-bezier(.2,.8,.2,1);
+      --ease-smooth: cubic-bezier(.16,1,.3,1);
+      --motion-fast: 180ms;
+      --motion-base: 320ms;
+      --motion-slow: 520ms;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background: var(--background);
+      font-family: 'Intel One Mono', monospace;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1000;
+      opacity: .22;
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(250,219,52,.15) 0 1px, transparent 1.4px),
+        radial-gradient(circle at 70% 65%, rgba(253,180,168,.12) 0 1px, transparent 1.4px);
+      background-size: 28px 28px, 34px 34px;
+      mix-blend-mode: multiply;
+    }
+
+    h1,h2,h3,h4,h5 {
+      font-family: 'Bubblegum Sans', cursive;
+      font-weight: 400;
+      margin: 0;
+      letter-spacing: .005em;
+      text-wrap: balance;
+      overflow-wrap: normal;
+      word-break: normal;
+    }
+    a { color: inherit; }
+    button, input { font: inherit; }
+    button { color: inherit; }
+    img { max-width: 100%; display: block; }
+
+    .page-shell { position: relative; isolation: isolate; }
+    .container { width: min(1180px, calc(100% - 48px)); margin: 0 auto; }
+
+    .doodle {
+      position: absolute;
+      pointer-events: none;
+      z-index: -1;
+      opacity: .95;
+    }
+    .doodle svg { width: 100%; height: 100%; overflow: visible; }
+    .doodle path, .doodle circle, .doodle line {
+      fill: none;
+      stroke: var(--text);
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Navigation */
+    .nav-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 16px 0 0;
+      pointer-events: none;
+    }
+    .nav {
+      pointer-events: auto;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 28px;
+      padding: 10px 12px 10px 16px;
+      background: rgba(255,255,255,.88);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1.5px solid var(--text);
+      border-radius: var(--radius);
+      box-shadow: 0 7px 0 rgba(250,219,52,.72), 0 18px 44px rgba(0,0,0,.06);
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      min-width: max-content;
+    }
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border: 1.5px solid var(--text);
+      border-radius: 15px;
+      background: var(--primary);
+      position: relative;
+      box-shadow: 3px 3px 0 var(--accent);
+      transition: transform .25s var(--ease);
+    }
+    .brand:hover .brand-mark { transform: rotate(-6deg) translateY(-1px); }
+    .brand-mark::before {
+      content: "";
+      position: absolute;
+      width: 7px; height: 7px;
+      background: var(--text);
+      border-radius: 50%;
+      left: 13px; top: 11px;
+    }
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      width: 17px; height: 9px;
+      background: var(--secondary);
+      border: 1.5px solid var(--text);
+      border-radius: 5px 10px 10px 5px;
+      right: -5px; top: 21px;
+      transform: rotate(6deg);
+    }
+    .brand-name {
+      font-family: 'Bubblegum Sans', cursive;
+      font-size: 26px;
+      line-height: 1;
+    }
+
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .nav-item { position: relative; }
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 0 14px;
+      border-radius: 14px;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 600;
+      transition: background .22s var(--ease), transform .22s var(--ease);
+    }
+    .nav-link:hover, .nav-item:focus-within .nav-link { background: var(--yellow-soft); transform: translateY(-1px); }
+    .chev { width: 10px; height: 10px; transition: transform .22s var(--ease); }
+    .nav-item:hover .chev, .nav-item:focus-within .chev { transform: rotate(180deg); }
+
+    .dropdown {
+      position: absolute;
+      top: calc(100% + 14px);
+      left: 50%;
+      width: 330px;
+      padding: 10px;
+      transform: translateX(-50%) translateY(-8px) scale(.98);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      background: var(--background);
+      border: 1.5px solid var(--text);
+      border-radius: var(--radius);
+      box-shadow: 6px 7px 0 var(--primary), var(--shadow-soft);
+      transition: opacity .22s var(--ease), transform .22s var(--ease), visibility .22s;
+    }
+    .nav-item:hover .dropdown,
+    .nav-item:focus-within .dropdown {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0) scale(1);
+    }
+    .dropdown::before {
+      content: "";
+      position: absolute;
+      top: -12px;
+      left: 0;
+      right: 0;
+      height: 14px;
+    }
+    .drop-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px 12px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+    }
+    .drop-badge {
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: var(--accent);
+      border: 1px solid var(--text);
+      font-size: 9px;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+    .drop-grid { display: grid; gap: 7px; }
+    .drop-card {
+      display: grid;
+      grid-template-columns: 42px 1fr auto;
+      gap: 11px;
+      align-items: center;
+      padding: 10px;
+      color: var(--text);
+      text-decoration: none;
+      border-radius: 14px;
+      transition: transform .2s var(--ease), background .2s var(--ease);
+    }
+    .drop-card:hover { transform: translateX(3px); background: var(--pink-soft); }
+    .drop-card:nth-child(2):hover { background: var(--yellow-soft); }
+    .drop-card:nth-child(3):hover { background: var(--orange-soft); }
+    .drop-icon {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border: 1.5px solid var(--text);
+      border-radius: 13px;
+      background: var(--primary);
+    }
+    .drop-card:nth-child(2) .drop-icon { background: var(--accent); }
+    .drop-card:nth-child(3) .drop-icon { background: var(--secondary); }
+    .drop-icon svg { width: 20px; height: 20px; }
+    .drop-copy strong { display: block; font-size: 11px; margin-bottom: 3px; }
+    .drop-copy small { display: block; font-size: 9px; line-height: 1.45; color: var(--ink-64); }
+    .drop-arrow { font-size: 17px; transition: transform .2s var(--ease); }
+    .drop-card:hover .drop-arrow { transform: translateX(3px); }
+
+    .nav-cta, .btn {
+      border: 1.5px solid var(--text);
+      border-radius: 16px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform .22s var(--ease), box-shadow .22s var(--ease), background .22s var(--ease);
+    }
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 16px;
+      background: var(--primary);
+      font-size: 11px;
+      font-weight: 700;
+      box-shadow: 3px 3px 0 var(--text);
+    }
+    .nav-cta:hover { transform: translate(-1px,-2px); box-shadow: 5px 6px 0 var(--text); }
+    .nav-cta:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--text); }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      padding: 92px 0 78px;
+      min-height: 720px;
+      display: flex;
+      align-items: center;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.02fr .98fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 34px;
+      padding: 0 12px;
+      border: 1.5px solid var(--text);
+      border-radius: 999px;
+      background: var(--accent);
+      font-size: 10px;
+      font-weight: 700;
+      margin-bottom: 22px;
+      box-shadow: 3px 3px 0 var(--secondary);
+    }
+    .eyebrow-dot {
+      width: 9px; height: 9px; border-radius: 50%;
+      background: var(--primary); border: 1px solid var(--text);
+    }
+    .hero h1 {
+      font-size: clamp(64px, 7.7vw, 118px);
+      line-height: .94;
+      max-width: 760px;
+      text-wrap: balance;
+    }
+    .scribble-word { position: relative; display: inline-block; }
+    .scribble-word::after {
+      content: "";
+      position: absolute;
+      left: -2%; right: -3%; bottom: -3px;
+      height: 13px;
+      background: url("data:image/svg+xml,%3Csvg width='340' height='20' viewBox='0 0 340 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 11 C45 3 87 18 130 9 S220 5 337 10' fill='none' stroke='%23FDB4A8' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E") center/100% 100% no-repeat;
+      z-index: -1;
+    }
+    .hero-copy {
+      margin: 29px 0 0;
+      max-width: 630px;
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--ink-80);
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+    .btn {
+      min-height: 52px;
+      padding: 0 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 11px;
+      background: var(--background);
+      box-shadow: 3px 4px 0 var(--text);
+    }
+    .btn:hover { transform: translate(-1px,-2px); box-shadow: 5px 7px 0 var(--text); }
+    .btn:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--text); }
+    .btn.primary { background: var(--primary); }
+    .btn.pink { background: var(--accent); }
+    .btn svg { width: 17px; height: 17px; }
+    .hero-mini {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 28px;
+      font-size: 10px;
+      color: var(--ink-64);
+    }
+    .mini-avatars { display: flex; }
+    .mini-avatar {
+      width: 30px; height: 30px; border-radius: 50%;
+      border: 1.5px solid var(--text); margin-left: -7px;
+      background: var(--primary);
+      display: grid; place-items: center;
+      font-family: 'Bubblegum Sans'; font-size: 14px;
+    }
+    .mini-avatar:first-child { margin-left: 0; background: var(--secondary); }
+    .mini-avatar:nth-child(2) { background: var(--accent); }
+
+    .mascot-stage {
+      position: relative;
+      min-height: 560px;
+      border-radius: var(--radius);
+      background: var(--primary);
+      border: 1.5px solid var(--text);
+      box-shadow: 9px 10px 0 var(--accent), var(--shadow);
+      overflow: hidden;
+      transform-style: preserve-3d;
+      transition: transform .18s var(--ease);
+    }
+    .mascot-stage::before {
+      content: "";
+      position: absolute;
+      width: 380px; height: 380px;
+      border: 2px solid var(--text);
+      border-radius: 50%;
+      top: -120px; right: -90px;
+      opacity: .15;
+    }
+    .mascot-stage::after {
+      content: "";
+      position: absolute;
+      width: 240px; height: 240px;
+      border: 2px dashed var(--text);
+      border-radius: 50%;
+      bottom: -100px; left: -70px;
+      opacity: .18;
+      animation: spin 25s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .stage-label {
+      position: absolute;
+      z-index: 4;
+      top: 22px; left: 22px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--background);
+      border: 1.5px solid var(--text);
+      border-radius: 999px;
+      padding: 8px 11px;
+      font-size: 10px;
+      font-weight: 700;
+      box-shadow: 3px 3px 0 var(--secondary);
+    }
+    .stage-status { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); border: 1px solid var(--text); }
+    .mascot-frame {
+      position: absolute;
+      inset: 74px 32px 30px;
+      display: grid;
+      place-items: center;
+      background: var(--background);
+      border: 1.5px solid var(--text);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+    .mascot-loop {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform: scale(1.015);
+      transform-origin: 50% 54%;
+      transition: transform .55s var(--ease-smooth);
+    }
+    .mascot-frame .draw-frame {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transform: none;
+      transition: none;
+      mix-blend-mode: multiply;
+      will-change: opacity;
+    }
+    .mascot-stage:hover .mascot-loop { transform: scale(1.045) rotate(.35deg); }
+
+    /* Deliberately low-frame-rate: preserves the cozy hand-drawn stop-motion feel. */
+    .frame-a, .speaker-a { animation: sketch-frame-a .46s steps(1,end) infinite; }
+    .frame-b, .speaker-b { animation: sketch-frame-b .46s steps(1,end) infinite; }
+    @keyframes sketch-frame-a { 0%,49.99% { opacity:1; } 50%,100% { opacity:0; } }
+    @keyframes sketch-frame-b { 0%,49.99% { opacity:0; } 50%,100% { opacity:1; } }
+
+    .hero-grid { position: relative; z-index: 2; }
+    .speaker-deco {
+      position: absolute;
+      z-index: 1;
+      width: clamp(112px, 10vw, 180px);
+      aspect-ratio: 1;
+      pointer-events: none;
+      opacity: .78;
+      filter: invert(1) contrast(1.08);
+      mix-blend-mode: multiply;
+    }
+    .speaker-deco img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      will-change: opacity;
+    }
+    .speaker-hero {
+      left: -42px;
+      bottom: 16px;
+      transform: rotate(-7deg);
+    }
+    .speaker-world {
+      right: -48px;
+      top: 34px;
+      transform: scaleX(-1) rotate(-8deg);
+      opacity: .72;
+    }
+    .float-note {
+      position: absolute;
+      z-index: 5;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 10px;
+      border: 1.5px solid var(--text);
+      border-radius: 12px;
+      background: var(--background);
+      box-shadow: 3px 3px 0 var(--text);
+      font-size: 9px;
+      font-weight: 700;
+      animation: floaty 5s ease-in-out infinite;
+    }
+    .note-one { right: 16px; top: 105px; background: var(--accent); }
+    .note-two { left: 15px; bottom: 68px; background: var(--secondary); animation-delay: -1.8s; }
+    .note-three { right: 20px; bottom: 33px; background: var(--background); animation-delay: -3s; }
+    @keyframes floaty { 0%,100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-8px) rotate(1deg); } }
+
+    /* Marquee */
+    .marquee-wrap {
+      border-top: 1.5px solid var(--text);
+      border-bottom: 1.5px solid var(--text);
+      background: var(--accent);
+      overflow: hidden;
+      transform: rotate(0deg);
+      margin: 0;
+    }
+    .marquee {
+      display: flex;
+      width: max-content;
+      min-width: 100%;
+      padding: 13px 0;
+      animation: marquee 28s linear infinite;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+    }
+    .marquee span { padding-right: 34px; }
+    .marquee b { margin: 0 13px; color: var(--secondary); -webkit-text-stroke: 1px var(--text); }
+    @keyframes marquee { to { transform: translateX(-50%); } }
+
+    /* Sections */
+    .section { padding: 110px 0; position: relative; }
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 36px;
+      margin-bottom: 38px;
+    }
+    .section-head h2 { font-size: clamp(48px, 6vw, 84px); line-height: 1.01; text-wrap: balance; }
+    .section-head p { max-width: 500px; margin: 0; font-size: 12px; line-height: 1.75; color: var(--ink-64); }
+    .kicker {
+      display: block;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      margin-bottom: 10px;
+    }
+
+    /* Builder mock */
+    .builder-shell {
+      background: var(--yellow-soft);
+      border: 1.5px solid var(--text);
+      border-radius: var(--radius);
+      padding: 14px;
+      box-shadow: 8px 9px 0 var(--secondary), var(--shadow);
+    }
+    .window-top {
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 0 8px 8px;
+    }
+    .window-dots { display: flex; gap: 7px; }
+    .window-dot { width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid var(--text); }
+    .window-dot:nth-child(1) { background: var(--accent); }
+    .window-dot:nth-child(2) { background: var(--secondary); }
+    .window-dot:nth-child(3) { background: var(--primary); }
+    .window-title { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .13em; }
+    .app-grid {
+      display: grid;
+      grid-template-columns: .82fr 1.18fr;
+      gap: 12px;
+    }
+    .app-panel {
+      background: var(--background);
+      border: 1.5px solid var(--text);
+      border-radius: 17px;
+      padding: 18px;
+      min-width: 0;
+    }
+    .panel-title { font-family: 'Bubblegum Sans'; font-size: 25px; margin-bottom: 4px; }
+    .panel-sub { font-size: 9px; line-height: 1.5; color: var(--ink-64); margin-bottom: 18px; }
+    .drop-zone {
+      min-height: 154px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      border: 1.5px dashed var(--text);
+      border-radius: 16px;
+      background: var(--pink-soft);
+      cursor: pointer;
+      transition: transform .2s var(--ease), background .2s var(--ease), box-shadow .2s var(--ease);
+    }
+    .drop-zone:hover { background: var(--accent); transform: translateY(-2px); box-shadow: 0 8px 0 rgba(0,0,0,.06); }
+    .upload-icon {
+      width: 46px; height: 46px;
+      display: grid; place-items: center;
+      border-radius: 15px;
+      border: 1.5px solid var(--text);
+      background: var(--primary);
+      margin: 0 auto 10px;
+    }
+    .upload-icon svg { width: 22px; }
+    .drop-zone strong { display: block; font-size: 10px; margin-bottom: 4px; }
+    .drop-zone span { display: block; font-size: 8px; color: var(--ink-64); }
+    .form-label { display: block; margin: 18px 0 7px; font-size: 8px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+    .fake-input {
+      height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      border: 1.5px solid var(--text);
+      border-radius: 14px;
+      font-size: 11px;
+      background: var(--background);
+    }
+    .segmented {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 7px;
+    }
+    .segmented button {
+      min-height: 40px;
+      border: 1.5px solid var(--text);
+      border-radius: 13px;
+      background: var(--background);
+      cursor: pointer;
+      font-size: 8px;
+      font-weight: 700;
+      transition: transform .18s var(--ease), background .18s var(--ease), box-shadow .18s var(--ease);
+    }
+    .segmented button:hover { transform: translateY(-1px); background: var(--yellow-soft); }
+    .segmented button.active { background: var(--primary); box-shadow: 2px 3px 0 var(--text); }
+    .generate {
+      width: 100%;
+      margin-top: 18px;
+      min-height: 50px;
+      border: 1.5px solid var(--text);
+      border-radius: 15px;
+      background: var(--primary);
+      box-shadow: 3px 4px 0 var(--text);
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .2s var(--ease), box-shadow .2s var(--ease);
+    }
+    .generate:hover { transform: translate(-1px,-2px); box-shadow: 5px 6px 0 var(--text); }
+    .generate.loading { pointer-events: none; animation: pulse .8s ease-in-out infinite alternate; }
+    @keyframes pulse { to { background: var(--secondary); } }
+
+    .set-panel { padding: 0; overflow: hidden; }
+    .set-panel-top {
+      display: flex; justify-content: space-between; align-items: center; gap: 20px;
+      padding: 18px;
+      border-bottom: 1.5px solid var(--text);
+      background: var(--primary);
+    }
+    .set-panel-top h3 { font-size: 25px; }
+    .set-meta { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .meta-chip {
+      padding: 6px 8px;
+      border: 1px solid var(--text);
+      border-radius: 999px;
+      background: var(--background);
+      font-size: 8px;
+      font-weight: 700;
+    }
+    .energy-chart {
+      height: 102px;
+      margin: 16px;
+      position: relative;
+      background: var(--pink-soft);
+      border: 1.5px solid var(--text);
+      border-radius: 15px;
+      overflow: hidden;
+    }
+    .energy-chart svg { width: 100%; height: 100%; }
+    .energy-chart .gridline { stroke: rgba(0,0,0,.11); stroke-width: 1; stroke-dasharray: 5 7; }
+    .energy-chart .curve { fill: none; stroke: var(--text); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .energy-chart .dot { fill: var(--primary); stroke: var(--text); stroke-width: 1.5; }
+    .track-list { padding: 0 16px 16px; }
+    .track-row {
+      display: grid;
+      grid-template-columns: 34px minmax(0,1.25fr) .55fr .35fr auto;
+      gap: 11px;
+      align-items: center;
+      min-height: 55px;
+      border-bottom: 1px solid var(--ink-12);
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity .3s var(--ease), transform .3s var(--ease), background .18s var(--ease);
+      border-radius: 12px;
+      padding: 0 8px;
+    }
+    .track-row:hover { background: var(--yellow-soft); }
+    .track-row.rebuild { opacity: 0; transform: translateY(8px); }
+    .track-num { font-size: 9px; color: var(--ink-48); }
+    .track-main { min-width: 0; }
+    .track-main strong { display: block; font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .track-main span { display: block; margin-top: 3px; font-size: 8px; color: var(--ink-64); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .track-bpm, .track-key { font-size: 9px; }
+    .track-key {
+      justify-self: start;
+      padding: 4px 6px;
+      border-radius: 8px;
+      border: 1px solid var(--text);
+      background: var(--accent);
+    }
+    .energy-pill { width: 56px; height: 7px; border: 1px solid var(--text); border-radius: 99px; overflow: hidden; }
+    .energy-pill i { display: block; height: 100%; background: var(--secondary); }
+
+    /* AI */
+    .ai-section { background: var(--primary); border-top: 1.5px solid var(--text); border-bottom: 1.5px solid var(--text); }
+    .ai-grid { display: grid; grid-template-columns: .86fr 1.14fr; gap: 36px; align-items: center; }
+    .ai-copy h2 { font-size: clamp(54px, 6vw, 86px); line-height: 1.01; text-wrap: balance; }
+    .ai-copy p { max-width: 520px; font-size: 12px; line-height: 1.75; margin: 22px 0 0; }
+    .ai-bubbles { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 22px; }
+    .ai-bubble {
+      padding: 8px 10px;
+      border: 1.5px solid var(--text);
+      border-radius: 999px;
+      background: var(--background);
+      font-size: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .18s var(--ease), background .18s var(--ease);
+    }
+    .ai-bubble:hover { transform: translateY(-2px) rotate(-1deg); background: var(--accent); }
+
+    .chat-card {
+      background: var(--background);
+      border: 1.5px solid var(--text);
+      border-radius: var(--radius);
+      box-shadow: 8px 9px 0 var(--accent), var(--shadow);
+      overflow: hidden;
+    }
+    .chat-head {
+      min-height: 62px;
+      display: flex; align-items: center; justify-content: space-between; gap: 20px;
+      padding: 0 16px;
+      border-bottom: 1.5px solid var(--text);
+      background: var(--pink-soft);
+    }
+    .chat-id { display: flex; align-items: center; gap: 10px; }
+    .chat-duck {
+      width: 38px; height: 38px; border-radius: 13px;
+      border: 1.5px solid var(--text); background: var(--primary); position: relative;
+    }
+    .chat-duck::before { content:""; position:absolute; width:6px; height:6px; border-radius:50%; background:var(--text); left:12px; top:10px; }
+    .chat-duck::after { content:""; position:absolute; width:15px; height:8px; border-radius:6px; background:var(--secondary); border:1px solid var(--text); right:-5px; top:20px; }
+    .chat-id strong { display:block; font-family:'Bubblegum Sans'; font-size:18px; }
+    .chat-id span { display:block; margin-top:1px; font-size:8px; color:var(--ink-64); }
+    .online { display:flex; align-items:center; gap:6px; font-size:8px; }
+    .online i { width:8px; height:8px; border-radius:50%; background:var(--primary); border:1px solid var(--text); }
+    .chat-body { min-height: 300px; padding: 18px; display: flex; flex-direction: column; gap: 11px; }
+    .message {
+      max-width: 78%;
+      padding: 11px 13px;
+      border: 1.5px solid var(--text);
+      border-radius: 16px;
+      font-size: 9px;
+      line-height: 1.6;
+      animation: pop .24s var(--ease) both;
+    }
+    .message.user { margin-left: auto; background: var(--primary); border-bottom-right-radius: 7px; }
+    .message.bot { background: var(--pink-soft); border-bottom-left-radius: 7px; }
+    @keyframes pop { from { opacity:0; transform:translateY(5px) scale(.98); } }
+    .typing { display: none; width: max-content; padding: 10px 13px; border: 1.5px solid var(--text); border-radius: 16px 16px 16px 7px; background: var(--pink-soft); }
+    .typing.show { display: flex; gap: 4px; }
+    .typing i { width:5px; height:5px; background:var(--text); border-radius:50%; animation: bounce 1s infinite ease-in-out; }
+    .typing i:nth-child(2) { animation-delay:.12s; }
+    .typing i:nth-child(3) { animation-delay:.24s; }
+    @keyframes bounce { 0%,80%,100% { transform:translateY(0); opacity:.45; } 40% { transform:translateY(-4px); opacity:1; } }
+    .chat-form { display: grid; grid-template-columns: 1fr auto; gap: 8px; padding: 12px; border-top: 1.5px solid var(--text); }
+    .chat-form input {
+      min-width:0; height:46px; border:1.5px solid var(--text); border-radius:14px; padding:0 13px; outline:0; background:var(--background); font-size:9px;
+    }
+    .chat-form input:focus { box-shadow: 0 0 0 4px var(--yellow-soft); }
+    .send-btn { width:46px; height:46px; display:grid; place-items:center; border:1.5px solid var(--text); border-radius:14px; background:var(--green); color:#fff; box-shadow:2px 3px 0 var(--text); cursor:pointer; }
+    .send-btn:hover { transform:translate(-1px,-1px); box-shadow:3px 4px 0 var(--text); }
+    .send-btn svg { width:18px; }
+
+    /* Brand world cards */
+    .world-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+    .world-card {
+      min-height: 300px;
+      padding: 26px;
+      border: 1.5px solid var(--text);
+      border-radius: var(--radius);
+      position: relative;
+      overflow: hidden;
+      transform: translate3d(0,0,0) rotate(0deg);
+      transform-origin: 50% 80%;
+      will-change: transform, box-shadow;
+      transition: transform var(--motion-slow) var(--ease-smooth), box-shadow var(--motion-slow) var(--ease-smooth), filter var(--motion-base) var(--ease-smooth);
+    }
+    .world-card:hover {
+      transform: translate3d(0,-10px,0) scale(1.012);
+      box-shadow: 8px 10px 0 var(--text), 0 24px 45px rgba(0,0,0,.10);
+      filter: saturate(1.02);
+    }
+    .world-card:nth-child(1) { background: var(--primary); }
+    .world-card:nth-child(2) { background: var(--accent); }
+    .world-card:nth-child(3) { background: var(--secondary); }
+    .world-card .no { font-size: 9px; font-weight:700; letter-spacing:.14em; }
+    .world-card h3 { font-size: 39px; line-height: 1.04; margin-top: 36px; max-width: 250px; text-wrap: balance; }
+    .world-card p { max-width: 275px; margin: 14px 0 0; font-size: 9px; line-height:1.65; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+      }
+    }
+
+    /* Footer */
+    footer { padding: 46px 0 58px; }
+    .footer-card {
+      display: flex; align-items:center; justify-content:space-between; gap:28px; flex-wrap:wrap;
+      padding: 22px;
+      border: 1.5px solid var(--text);
+      border-radius: var(--radius);
+      background: var(--background);
+      box-shadow: 6px 7px 0 var(--primary);
+    }
+    .footer-left { display:flex; align-items:center; gap:13px; }
+    .footer-copy strong { display:block; font-family:'Bubblegum Sans'; font-size:24px; }
+    .footer-copy span { display:block; margin-top:4px; font-size:8px; color:var(--ink-64); }
+    .footer-links { display:flex; gap:16px; flex-wrap:wrap; font-size:8px; }
+    .footer-links a { text-decoration:none; border-bottom:1px solid transparent; }
+    .footer-links a:hover { border-color:var(--text); }
+
+    /* reveal */
+    .reveal { opacity:0; transform:translateY(22px); transition: opacity .65s var(--ease), transform .65s var(--ease); }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .world-card.reveal.visible:hover {
+      transform: translate3d(0,-10px,0) scale(1.012);
+      box-shadow: 8px 10px 0 var(--text), 0 24px 45px rgba(0,0,0,.10);
+    }
+
+    /* responsive */
+    @media (max-width: 980px) {
+      .nav { grid-template-columns:auto auto; }
+      .nav-menu { display:none; }
+      .nav-cta { justify-self:end; }
+      .hero { padding-top:70px; }
+      .hero-grid, .ai-grid { grid-template-columns:1fr; }
+      .hero-grid { gap:40px; }
+      .mascot-stage { min-height:520px; }
+      .app-grid { grid-template-columns:1fr; }
+      .world-grid { grid-template-columns:1fr; }
+      .section-head { align-items:flex-start; flex-direction:column; }
+      .section-head p { max-width:680px; }
+      .speaker-deco { width:120px; opacity:.48; }
+      .speaker-hero { left:-46px; bottom:8px; }
+      .speaker-world { right:-42px; top:18px; }
+    }
+    @media (max-width: 640px) {
+      .container { width:min(100% - 28px, 1180px); }
+      .nav-wrap { padding-top:10px; }
+      .nav { padding:8px 9px 8px 12px; }
+      .brand-name { font-size:22px; }
+      .brand-mark { width:38px; height:38px; }
+      .nav-cta { min-height:40px; padding:0 11px; font-size:9px; }
+      .hero { min-height:auto; padding:64px 0 62px; }
+      .hero h1 { font-size: clamp(56px, 18vw, 84px); line-height:.96; }
+      .hero-copy { font-size:12px; }
+      .mascot-stage { min-height:430px; }
+      .mascot-frame { inset:68px 18px 22px; }
+      .float-note { font-size:7px; }
+      .section { padding:82px 0; }
+      .section-head h2, .ai-copy h2 { font-size:52px; }
+      .set-panel-top { align-items:flex-start; flex-direction:column; }
+      .set-meta { justify-content:flex-start; }
+      .track-row { grid-template-columns:26px minmax(0,1fr) .4fr auto; }
+      .track-key { display:none; }
+      .ai-section .section { padding:82px 0; }
+      .chat-body { min-height:250px; }
+      .footer-card { align-items:flex-start; flex-direction:column; }
+      .speaker-deco { display:none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration:.001ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; transition-duration:.001ms !important; }
+      .frame-a, .speaker-a { opacity:1 !important; }
+      .frame-b, .speaker-b { opacity:0 !important; }
+    }
+
+
+    /* GrooveDuck v4 brand/logo */
+    .brand-logo-wrap {
+      width: 46px; height: 46px; border-radius: 15px; overflow: hidden;
+      display: grid; place-items: center; background: var(--background);
+      border: 1.5px solid var(--text); box-shadow: 3px 4px 0 var(--primary);
+      transform-origin: 50% 70%;
+      transition: transform .36s var(--ease-smooth), box-shadow .36s var(--ease-smooth);
+    }
+    .brand-logo-img { width: 120%; height: 120%; object-fit: contain; transform: scale(1.02); }
+    .brand:hover .brand-logo-wrap {
+      transform: translateY(-3px) rotate(-5deg) scale(1.04);
+      box-shadow: 5px 7px 0 var(--accent);
+    }
+    .brand:hover .brand-name { transform: translateY(-1px); }
+    .brand-name { transition: transform .3s var(--ease-smooth); }
+    .footer-logo-wrap { width: 48px; height: 48px; border: 1.5px solid var(--text); border-radius: 15px; overflow: hidden; background: white; box-shadow: 3px 4px 0 var(--accent); }
+    .footer-logo-wrap img { width: 120%; height: 120%; object-fit: contain; }
+
+    /* Use the official head inside GrooveDuck AI as well. */
+    .chat-duck { overflow: hidden; background: var(--background) url('assets/logo.png') center/122% no-repeat; }
+    .chat-duck::before, .chat-duck::after { display:none; }
+
+    /* Hand-drawn frame motion is controlled with JS, not a mechanical CSS loop. */
+    .frame-a, .frame-b, .speaker-a, .speaker-b { animation: none !important; transition: none !important; }
+    .frame-a, .speaker-a { opacity: 1; }
+    .frame-b, .speaker-b { opacity: 0; }
+    .speaker-a { transform: scale(1) translate3d(0,0,0); }
+    .speaker-b { transform: scale(1.045,.985) translate3d(2px,-1px,0); }
+    .speaker-deco { filter: none; mix-blend-mode: normal; }
+    .speaker-deco::after {
+      content:""; position:absolute; inset:18%; border-radius:50%;
+      box-shadow:0 0 0 0 rgba(250,219,52,.28); opacity:0; pointer-events:none;
+    }
+    .speaker-deco.pulse-b::after { animation: speaker-ring .32s var(--ease-smooth); }
+    @keyframes speaker-ring { 0% { opacity:.55; box-shadow:0 0 0 0 rgba(250,219,52,.36); } 100% { opacity:0; box-shadow:0 0 0 26px rgba(250,219,52,0); } }
+
+    /* Mascot moments */
+    .moments-section {
+      background: var(--gray); border-top: 1.5px solid var(--text); border-bottom: 1.5px solid var(--text);
+      overflow: hidden;
+    }
+    .moments-head { display:flex; align-items:end; justify-content:space-between; gap:30px; margin-bottom:32px; }
+    .moments-head h2 { font-size:clamp(48px,6vw,82px); line-height:1.01; }
+    .moments-head p { max-width:470px; margin:0; font-size:11px; line-height:1.75; color:var(--ink-64); }
+    .moments-rail {
+      display:grid; grid-template-columns:repeat(6,minmax(210px,1fr)); gap:14px;
+      overflow-x:auto; padding:5px 2px 18px; scroll-snap-type:x proximity; scrollbar-width:thin;
+    }
+    .moment-card {
+      min-width:220px; min-height:310px; padding:16px; border:1.5px solid var(--text); border-radius:var(--radius);
+      background:var(--background); position:relative; overflow:hidden; scroll-snap-align:start;
+      transition:transform .45s var(--ease-smooth), box-shadow .45s var(--ease-smooth), background .3s var(--ease-smooth);
+    }
+    .moment-card:nth-child(2n) { background:rgba(250,219,52,.34); }
+    .moment-card:nth-child(3n) { background:rgba(253,180,168,.42); }
+    .moment-card:hover { transform:translateY(-8px) rotate(-.5deg); box-shadow:7px 9px 0 var(--text); }
+    .moment-card img { width:100%; height:230px; object-fit:contain; transition:transform .5s var(--ease-smooth); }
+    .moment-card:hover img { transform:scale(1.035) rotate(.6deg); }
+    .moment-card strong { display:block; margin-top:8px; font-family:'Bubblegum Sans'; font-size:22px; }
+    .moment-card span { display:block; margin-top:3px; font-size:8px; color:var(--ink-64); text-transform:uppercase; letter-spacing:.1em; }
+
+    /* Pricing */
+    .pricing-section { padding:120px 0 130px; position:relative; overflow:hidden; }
+    .pricing-head { display:flex; align-items:end; justify-content:space-between; gap:32px; margin-bottom:40px; }
+    .pricing-head h2 { font-size:clamp(54px,6.4vw,90px); line-height:1; }
+    .pricing-head p { max-width:480px; margin:0; font-size:11px; line-height:1.75; color:var(--ink-64); }
+    .pricing-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; align-items:stretch; }
+    .tier-card {
+      min-height:610px; border:1.5px solid var(--text); border-radius:var(--radius); padding:22px;
+      display:flex; flex-direction:column; position:relative; overflow:hidden;
+      transition:transform .5s var(--ease-smooth), box-shadow .5s var(--ease-smooth);
+    }
+    .tier-card:hover { transform:translateY(-10px) scale(1.012); box-shadow:9px 11px 0 var(--text), 0 26px 50px rgba(0,0,0,.08); }
+    .tier-cozy { background:var(--primary); }
+    .tier-fast { background:var(--accent); }
+    .tier-smart { background:var(--secondary); }
+    .tier-topline { display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:8px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; }
+    .tier-chip { padding:6px 8px; border:1.5px solid var(--text); border-radius:999px; background:rgba(255,255,255,.72); }
+    .tier-card h3 { font-size:clamp(35px,3.2vw,48px); line-height:1.02; margin-top:14px; }
+    .tier-card .tier-copy { font-size:9px; line-height:1.65; margin:10px 0 0; max-width:310px; min-height:48px; }
+    .tier-mascot {
+      height:245px; display:grid; place-items:center; margin:10px -5px 0; position:relative;
+    }
+    .tier-mascot img { width:100%; height:100%; object-fit:contain; transition:transform .5s var(--ease-smooth); }
+    .tier-card:hover .tier-mascot img { transform:scale(1.035) rotate(-.7deg); }
+    .tier-features { display:grid; gap:8px; list-style:none; padding:0; margin:14px 0 20px; font-size:8.5px; line-height:1.45; }
+    .tier-features li { display:grid; grid-template-columns:18px 1fr; gap:7px; align-items:start; }
+    .tier-features li::before { content:'✓'; width:16px; height:16px; border:1px solid var(--text); border-radius:50%; display:grid; place-items:center; font-size:8px; font-weight:700; background:rgba(255,255,255,.72); }
+    .tier-cta {
+      margin-top:auto; min-height:48px; border:1.5px solid var(--text); border-radius:15px; background:var(--green); color:#fff;
+      display:flex; align-items:center; justify-content:space-between; padding:0 14px; text-decoration:none; font-size:9px; font-weight:700;
+      box-shadow:3px 4px 0 var(--text); transition:transform .24s var(--ease), box-shadow .24s var(--ease), background .24s var(--ease);
+    }
+    .tier-cta:hover { transform:translate(-1px,-2px); box-shadow:5px 6px 0 var(--text); background:#264a31; }
+    .tier-fast .tier-cta { background:var(--brown); }
+    .tier-fast .tier-cta:hover { background:#925d35; }
+    .tier-smart .tier-cta { background:var(--green); }
+    .pricing-note {
+      margin-top:22px; padding:16px 18px; border:1.5px solid var(--text); border-radius:var(--radius); background:var(--gray);
+      display:flex; align-items:center; justify-content:space-between; gap:20px; font-size:8.5px; line-height:1.6;
+    }
+    .pricing-note strong { font-family:'Bubblegum Sans'; font-size:21px; }
+
+    @media (max-width:980px) {
+      .pricing-grid { grid-template-columns:1fr; }
+      .tier-card { min-height:unset; }
+      .tier-mascot { height:300px; }
+      .moments-head, .pricing-head { align-items:flex-start; flex-direction:column; }
+      .moments-rail { grid-template-columns:repeat(6,240px); }
+    }
+    @media (max-width:640px) {
+      .brand-logo-wrap { width:40px; height:40px; border-radius:13px; }
+      .pricing-section { padding:84px 0 94px; }
+      .pricing-head h2, .moments-head h2 { font-size:52px; }
+      .tier-mascot { height:240px; }
+      .pricing-note { align-items:flex-start; flex-direction:column; }
+    }
+
+
+    
+    /* GrooveDuck v6 — refined landing, cleaner hierarchy, fixed cards and scroll duck */
+    .hero-v5 { min-height: 780px; padding: 138px 0 76px; overflow: clip; }
+    .hero-grid-v5 { grid-template-columns: 1.02fr .98fr; gap: 54px; position: relative; z-index: 2; }
+    .hero-brand-title {
+      font-size: clamp(82px, 9.1vw, 144px) !important;
+      line-height: .88 !important;
+      letter-spacing: -.015em;
+      max-width: 820px !important;
+      text-wrap: nowrap !important;
+    }
+    .hero-tagline {
+      margin-top: 18px;
+      font-size: clamp(30px, 3.1vw, 48px);
+      line-height: 1.03;
+      max-width: 720px;
+    }
+    .hero-slogan {
+      margin-top: 28px;
+      display: grid;
+      gap: 8px;
+      font-family: 'Bubblegum Sans', cursive;
+      font-size: clamp(34px, 4vw, 58px);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    .hero-slogan > span { display:block; }
+    .hero-slogan .scribble-word::after { bottom: -4px; height: 8px; }
+    .hero-v5 .hero-copy { margin-top: 24px; max-width: 650px; }
+    .hero-proof { display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin-top:25px; font-size:8px; font-weight:700; letter-spacing:.11em; }
+    .hero-proof i { width:5px; height:5px; background:var(--secondary); border:1px solid var(--text); border-radius:50%; }
+
+    .scroll-progress {
+      position: fixed;
+      top: 84px;
+      left: max(18px, calc(50% - 590px));
+      right: max(18px, calc(50% - 590px));
+      height: 82px;
+      z-index: 48;
+      pointer-events: none;
+    }
+    .scroll-rail {
+      position: relative;
+      height: 82px;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      overflow: visible;
+    }
+    .scroll-rail::before {
+      content:"";
+      position:absolute;
+      left: 0;
+      right: 0;
+      bottom: 13px;
+      height: 10px;
+      background: var(--primary);
+      border: 1.5px solid var(--text);
+      border-radius: 999px;
+      box-shadow: 0 3px 0 rgba(0,0,0,.08);
+    }
+    .scroll-rail::after {
+      display:none;
+      content:"";
+    }
+    .scroll-duck {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 72px;
+      height: auto;
+      transform: translateX(0);
+      will-change: transform;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,.10));
+    }
+
+    .speaker-deco {
+      pointer-events: none;
+      z-index: 0;
+      opacity: 1 !important;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.10));
+      mix-blend-mode: normal !important;
+    }
+    .speaker-deco img { object-fit:contain; filter:none !important; opacity:1 !important; }
+    .speaker-a, .speaker-b { transform:none !important; }
+    .speaker-deco::after { display:none !important; }
+    .speaker-hero-left { left: max(-34px, calc(50% - 760px)); top: 156px; width: clamp(104px, 10vw, 150px); transform: rotate(-6deg) !important; }
+    .speaker-hero-right { right: max(-30px, calc(50% - 760px)); bottom: 42px; width: clamp(118px, 11vw, 174px); transform: scaleX(-1) rotate(-4deg) !important; }
+    .speaker-world { right: max(-36px, calc(50% - 760px)); top: 68px; width: clamp(98px, 9vw, 138px); }
+
+    .ai-section { background: var(--background); border-top: 1.5px solid var(--text); border-bottom: 1.5px solid var(--text); }
+    .ai-moods-section { padding: 96px 0 0; }
+    .ai-moods-head { display:flex; align-items:end; justify-content:space-between; gap:36px; margin-bottom:34px; }
+    .ai-moods-head h2 { font-size:clamp(48px,6vw,84px); line-height:1.01; max-width:760px; }
+    .ai-moods-head p { max-width:480px; margin:0; font-size:11px; line-height:1.75; }
+    .mood-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+    .mood-card {
+      min-height: 560px;
+      display:flex; flex-direction:column; text-align:left; position:relative; isolation:isolate;
+      border:1.5px solid var(--text); border-radius:var(--radius); padding:20px; cursor:pointer; color:var(--text);
+      background: var(--background);
+      font-family:'Intel One Mono', monospace;
+      transition:transform .36s var(--ease-smooth), box-shadow .36s var(--ease-smooth);
+      overflow: visible;
+    }
+    .mood-card:hover, .mood-card.active { transform:translateY(-6px); box-shadow:8px 10px 0 var(--text); z-index:4; }
+    .mood-card.active::after { content:'ACTIVE'; position:absolute; right:14px; top:14px; padding:5px 7px; border:1px solid var(--text); border-radius:999px; background:#fff; font-size:7px; font-weight:700; letter-spacing:.12em; }
+    .mood-cozy { background:var(--primary); }
+    .mood-fast { background:var(--accent); }
+    .mood-smart { background:var(--gray); }
+    .mood-level { font-size:8px; font-weight:700; letter-spacing:.13em; }
+    .mood-copy h3 { margin-top:10px; font-size:clamp(32px,3vw,44px); line-height:1.02; }
+    .mood-copy p { margin:8px 0 0; font-size:9px; line-height:1.55; }
+    .mood-visual { height: 280px; margin: 20px 0 18px; display:grid; place-items:center; flex:0 0 auto; }
+    .mood-visual img { width:100%; height:100%; object-fit:contain; transition:transform .45s var(--ease-smooth); }
+    .mood-card:hover .mood-visual img { transform:scale(1.03) rotate(-.45deg); }
+    .mood-select { margin-top:auto; display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border:1.5px solid var(--text); border-radius:13px; background:#fff; font-size:8px; font-weight:700; }
+    .mood-select b { font-size:16px; }
+
+    .ai-chat-wrap { margin-top: 36px; background: var(--primary); border-top: 1.5px solid var(--text); padding: 36px 0 42px; }
+    .ai-demo-row { margin-top: 0; display:block; }
+    .ai-demo-copy { display:none; }
+    .ai-demo-row .chat-card { height:100%; width:100%; }
+
+    .moments-section {
+      background: var(--gray);
+      border-top: 0;
+      border-bottom: 1.5px solid var(--text);
+      overflow: hidden;
+      padding: 0 0 92px;
+    }
+    .moments-head { display:flex; align-items:end; justify-content:space-between; gap:30px; margin-bottom:28px; }
+    .moments-head h2 { font-size:clamp(48px,6vw,82px); line-height:1.01; }
+    .moments-head p { max-width:470px; margin:0; font-size:11px; line-height:1.75; color:var(--ink-64); }
+    .moments-nav { display:none; }
+    .moments-rail {
+      display:grid;
+      grid-template-columns: repeat(5, minmax(0,1fr));
+      gap:14px;
+      overflow: visible;
+      padding: 5px 0 0;
+      scroll-snap-type: none;
+      scrollbar-width:none;
+    }
+    .moment-card {
+      min-width: 0; min-height: 320px; padding:16px; border:1.5px solid var(--text); border-radius:var(--radius);
+      background:var(--background); position:relative; overflow:hidden; scroll-snap-align:none;
+      transition:transform .30s var(--ease-smooth), box-shadow .30s var(--ease-smooth), background .3s var(--ease-smooth);
+      z-index: 1;
+    }
+    .moment-card:nth-child(2n) { background:rgba(250,219,52,.34); }
+    .moment-card:nth-child(3n) { background:rgba(253,180,168,.42); }
+    .moment-card:hover { transform:translateY(-6px); box-shadow:7px 9px 0 var(--text); z-index:2; }
+    .moment-card img { width:100%; height:230px; object-fit:contain; transition:transform .4s var(--ease-smooth); }
+    .moment-card:hover img { transform:scale(1.03) rotate(.4deg); }
+    .moment-card strong { display:block; margin-top:8px; font-family:'Bubblegum Sans'; font-size:22px; }
+    .moment-card span { display:block; margin-top:3px; font-size:8px; color:var(--ink-64); text-transform:uppercase; letter-spacing:.1em; }
+
+    .pricing-section { padding: 94px 0 118px; position:relative; overflow:hidden; background:#fff; }
+    .pricing-head { display:flex; align-items:end; justify-content:space-between; gap:32px; margin-bottom:40px; }
+    .pricing-head h2 { font-size:clamp(54px,6.4vw,90px); line-height:1; }
+    .pricing-head p { max-width:480px; margin:0; font-size:11px; line-height:1.75; color:var(--ink-64); }
+    .pricing-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; align-items:stretch; }
+    .tier-card {
+      min-height: 760px; border:1.5px solid var(--text); border-radius:var(--radius); padding:22px;
+      display:flex; flex-direction:column; position:relative; overflow:hidden;
+      transition:transform .34s var(--ease-smooth), box-shadow .34s var(--ease-smooth);
+    }
+    .tier-card:hover { transform:translateY(-8px); box-shadow:9px 11px 0 var(--text), 0 26px 50px rgba(0,0,0,.08); }
+    .tier-free { background:var(--secondary); }
+    .tier-medium { background:var(--accent); }
+    .tier-premium { background:var(--primary); }
+    .tier-topline { display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:8px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; }
+    .tier-chip { padding:6px 8px; border:1.5px solid var(--text); border-radius:999px; background:rgba(255,255,255,.72); }
+    .tier-card h3 { font-size:clamp(35px,3.2vw,48px); line-height:1.02; margin-top:14px; }
+    .tier-card .tier-copy { font-size:9px; line-height:1.65; margin:10px 0 0; max-width:310px; min-height:48px; }
+    .tier-mascot {
+      height: 260px; display:grid; place-items:center; margin:18px 0 10px; position:relative; padding: 0 6px;
+      overflow: visible; flex: 0 0 auto;
+    }
+    .tier-mascot img { max-width:100%; max-height:100%; width:auto; height:100%; object-fit:contain; object-position:center center; transition:transform .42s var(--ease-smooth); }
+    .tier-card:hover .tier-mascot img { transform:scale(1.02) rotate(-.25deg); }
+    .tier-features { display:grid; gap:6px; list-style:none; padding:0; margin:30px 0 18px; font-size:8.5px; line-height:1.35; flex:0 0 auto; align-content:start; }
+    .tier-features li { display:grid; grid-template-columns:18px 1fr; gap:7px; align-items:start; }
+    .tier-features li::before { content:'✓'; width:16px; height:16px; border:1px solid var(--text); border-radius:50%; display:grid; place-items:center; font-size:8px; font-weight:700; background:rgba(255,255,255,.72); }
+    .tier-cta {
+      min-height:54px; border:1.5px solid var(--text); border-radius:15px; background:var(--green); color:#fff;
+      display:flex; align-items:center; justify-content:space-between; padding:0 16px; text-decoration:none; font-size:9px; font-weight:700;
+      box-shadow:3px 4px 0 var(--text); transition:transform .24s var(--ease), box-shadow .24s var(--ease), background .24s var(--ease); margin-top:auto;
+    }
+    .tier-cta:hover { transform:translate(-1px,-2px); box-shadow:5px 6px 0 var(--text); background:#264a31; }
+    .tier-free .tier-cta { background:var(--background); color:var(--text); }
+    .tier-free .tier-cta:hover { background:var(--gray); }
+    .tier-medium .tier-cta, .tier-premium .tier-cta { background:var(--green); color:#fff; }
+    .pricing-note {
+      margin-top:22px; padding:16px 18px; border:1.5px solid var(--text); border-radius:var(--radius); background:var(--gray);
+      display:flex; align-items:center; justify-content:space-between; gap:20px; font-size:8.5px; line-height:1.6;
+    }
+    .pricing-note strong { font-family:'Bubblegum Sans'; font-size:21px; }
+
+    @media (max-width: 1180px) {
+      .hero-brand-title { font-size:clamp(74px,10vw,118px) !important; }
+      .speaker-hero-left { left:-12px; }
+      .speaker-hero-right { right:-16px; }
+    }
+    @media (max-width: 980px) {
+      .hero-v5 { min-height:auto; padding-top:128px; }
+      .hero-grid-v5 { grid-template-columns:1fr; }
+      .hero-brand-title { text-wrap:wrap !important; }
+      .mood-grid, .pricing-grid { grid-template-columns:1fr; }
+      .mood-card { min-height:unset; }
+      .ai-demo-row { grid-template-columns:1fr; }
+      .moments-rail { grid-template-columns:repeat(2, minmax(0,1fr)); }
+      .tier-card { min-height:unset; }
+      .tier-mascot { height:300px; }
+      .pricing-head, .moments-head, .ai-moods-head { align-items:flex-start; flex-direction:column; }
+      .speaker-world { right: -18px; }
+    }
+    @media (max-width: 640px) {
+      .hero-brand-title { font-size:clamp(60px,20vw,90px) !important; line-height:.92 !important; }
+      .hero-tagline { font-size:31px; }
+      .hero-slogan { font-size:38px; margin-top:20px; }
+      .hero-proof { display:none; }
+      .speaker-hero-left, .speaker-hero-right { display:none; }
+      .scroll-progress { left:16px; right:16px; top:78px; height:64px; }
+      .scroll-rail { height:64px; }
+      .scroll-rail::after { display:none; }
+      .scroll-rail::before { bottom: 10px; height: 8px; }
+      .scroll-duck { width:58px; bottom:0; }
+      .mood-card { display:flex; }
+      .mood-visual { height:230px; }
+      .moments-rail { grid-template-columns:1fr; }
+      .tier-mascot { height:240px; }
+      .pricing-note { align-items:flex-start; flex-direction:column; }
+    }
+
+  
+
+    /* GrooveDuck v10 — final polish pass */
+    html { scroll-padding-top: 188px; }
+    section[id], main[id] { scroll-margin-top: 188px; }
+
+    /* Scroll road: just the yellow road + the duck, with wheels centered on it. */
+    .scroll-progress {
+      top: 86px;
+      height: 76px;
+      left: max(18px, calc(50% - 590px));
+      right: max(18px, calc(50% - 590px));
+    }
+    .scroll-rail { height: 76px; overflow: visible; }
+    .scroll-rail::before {
+      left: 0;
+      right: 0;
+      bottom: 14px;
+      height: 9px;
+      background: var(--primary);
+      border: 1.5px solid var(--text);
+      border-radius: 999px;
+      box-shadow: none;
+    }
+    .scroll-rail::after { display:none !important; content:"" !important; }
+    .scroll-duck {
+      width: 60px;
+      bottom: 10px;
+      filter: drop-shadow(0 3px 6px rgba(0,0,0,.10));
+    }
+
+    /* Real speaker movement: hand-drawn frame switch + subtle 100→110% bass pulse. */
+    .speaker-deco {
+      scale: 1;
+      animation: speaker-bass-pulse .56s ease-in-out infinite;
+      transform-origin: center center;
+    }
+    .speaker-hero-right { animation-delay: .06s; }
+    @keyframes speaker-bass-pulse {
+      0%,100% { scale: 1; }
+      48% { scale: 1.10; }
+      62% { scale: 1.055; }
+    }
+
+    /* Mascot cards: only approved GrooveDuck palette colours. */
+    .moments-section { overflow: visible; }
+    .moments-carousel { overflow: visible; }
+    .moments-rail {
+      grid-template-columns: repeat(5, minmax(0,1fr));
+      gap: 14px;
+      overflow: visible;
+      padding: 10px 0 0;
+    }
+    .moment-card {
+      min-width: 0;
+      min-height: 338px;
+      overflow: visible;
+      background: var(--gray) !important;
+    }
+    .moment-card img {
+      height: 245px;
+      width: 100%;
+      object-fit: contain;
+      object-position: center;
+    }
+    .moment-card.tone-gray { background: var(--gray) !important; color: var(--text); }
+    .moment-card.tone-primary { background: var(--primary) !important; color: var(--text); }
+    .moment-card.tone-secondary { background: var(--secondary) !important; color: var(--text); }
+    .moment-card.tone-accent { background: var(--accent) !important; color: var(--text); }
+    .moment-card.tone-brown { background: var(--brown) !important; color: #fff; }
+    .moment-card.tone-green { background: var(--green) !important; color: #fff; }
+    .moment-card.tone-brown span, .moment-card.tone-green span { color: rgba(255,255,255,.76); }
+    .moment-card:hover { z-index: 6; }
+
+    /* Pricing: keep current layout, lower the content slightly and compact the bullets. */
+    .tier-card { padding-top: 32px; }
+    .tier-mascot { margin-top: 18px; }
+    .tier-features {
+      margin-top: 26px;
+      margin-bottom: 18px;
+      gap: 7px;
+      align-content: start;
+    }
+    .tier-features li { line-height: 1.32; }
+
+    @media (max-width: 980px) {
+      .moments-rail { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      html { scroll-padding-top: 174px; }
+      section[id], main[id] { scroll-margin-top: 174px; }
+    }
+    @media (max-width: 640px) {
+      .scroll-progress { top: 76px; height: 60px; left: 14px; right: 14px; }
+      .scroll-rail { height: 60px; }
+      .scroll-rail::before { bottom: 10px; height: 7px; }
+      .scroll-duck { width: 50px; bottom: 7px; }
+      .moments-rail { grid-template-columns: 1fr; }
+      html { scroll-padding-top: 148px; }
+      section[id], main[id] { scroll-margin-top: 148px; }
+    }
+
+
+    /* GrooveDuck v11 — carousel, pricing alignment, yellow builder and full footer */
+
+    /* Lower the progress road and duck slightly so the mascot never clips into the bar above. */
+    .scroll-progress {
+      top: 100px;
+    }
+    .scroll-duck {
+      bottom: 10px;
+    }
+
+    /* Builder becomes a warm yellow brand section. */
+    #builder {
+      background: var(--primary);
+      border-top: 1.5px solid var(--text);
+      border-bottom: 1.5px solid var(--text);
+    }
+    #builder .section-head p { color: var(--ink-80); }
+    #builder .builder-shell { background: rgba(255,255,255,.72); }
+
+    /* Mood moments become one calm horizontal carousel. */
+    .moments-section {
+      overflow: hidden;
+      background: var(--gray);
+    }
+    .moments-carousel {
+      position: relative;
+      display: grid;
+      grid-template-columns: 52px minmax(0,1fr) 52px;
+      align-items: center;
+      gap: 12px;
+      overflow: visible;
+    }
+    .moments-viewport {
+      overflow: hidden;
+      padding: 16px 7px 18px;
+      margin: -16px -7px -18px;
+      border-radius: var(--radius);
+    }
+    .moments-rail {
+      display: flex !important;
+      grid-template-columns: none !important;
+      width: max-content;
+      gap: 18px;
+      overflow: visible !important;
+      padding: 0 !important;
+      will-change: transform;
+    }
+    .moment-card {
+      flex: 0 0 clamp(245px, 21vw, 300px);
+      min-width: 245px;
+      min-height: 355px;
+      overflow: hidden;
+      border-radius: var(--radius);
+    }
+    .moment-card img {
+      height: 250px;
+      padding: 4px;
+    }
+    .moment-card:hover {
+      transform: translateY(-7px) rotate(-.35deg);
+      box-shadow: 7px 9px 0 var(--text);
+    }
+    .moments-arrow {
+      width: 52px;
+      height: 52px;
+      border: 1.5px solid var(--text);
+      border-radius: 16px;
+      background: var(--primary);
+      color: var(--text);
+      display: grid;
+      place-items: center;
+      font-family: 'Intel One Mono', monospace;
+      font-size: 24px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 4px 5px 0 var(--text);
+      transition: transform .22s var(--ease), box-shadow .22s var(--ease), background .22s var(--ease);
+      z-index: 8;
+    }
+    .moments-arrow:hover {
+      transform: translateY(-2px);
+      box-shadow: 6px 7px 0 var(--text);
+      background: var(--secondary);
+    }
+    .moments-arrow:active {
+      transform: translateY(1px);
+      box-shadow: 2px 3px 0 var(--text);
+    }
+    .moments-arrow svg { width: 22px; height: 22px; }
+
+    /* Approved palette only, balanced across the full row. */
+    .moment-card.tone-gray { background: var(--gray) !important; color: var(--text); }
+    .moment-card.tone-primary { background: var(--primary) !important; color: var(--text); }
+    .moment-card.tone-secondary { background: var(--secondary) !important; color: var(--text); }
+    .moment-card.tone-accent { background: var(--accent) !important; color: var(--text); }
+    .moment-card.tone-brown { background: var(--brown) !important; color: #fff; }
+    .moment-card.tone-green { background: var(--green) !important; color: #fff; }
+    .moment-card.tone-brown span,
+    .moment-card.tone-green span { color: rgba(255,255,255,.78); }
+
+    /* Pricing: exact shared vertical rhythm and clear Free < Medium < Premium visual hierarchy. */
+    .pricing-grid { align-items: stretch; }
+    .tier-card {
+      min-height: 780px;
+      display: grid;
+      grid-template-rows: 28px 54px 76px 292px 142px 58px;
+      gap: 0;
+      padding: 36px 22px 22px;
+    }
+    .tier-topline { align-self: start; }
+    .tier-card h3 {
+      margin: 8px 0 0;
+      align-self: start;
+    }
+    .tier-card .tier-copy {
+      min-height: 0;
+      margin: 8px 0 0;
+      align-self: start;
+    }
+    .tier-mascot {
+      height: 292px;
+      margin: 0;
+      padding: 4px 0 0;
+      display: grid;
+      place-items: center;
+      overflow: visible;
+    }
+    .tier-mascot img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center center;
+    }
+    .tier-free .tier-mascot img {
+      width: 84%;
+      height: 84%;
+    }
+    .tier-medium .tier-mascot img {
+      width: 93%;
+      height: 93%;
+    }
+    .tier-premium .tier-mascot img {
+      width: 100%;
+      height: 100%;
+    }
+    .tier-features {
+      margin: 0;
+      min-height: 0;
+      gap: 7px;
+      align-self: center;
+      align-content: start;
+      padding-top: 10px;
+      display: grid;
+    }
+    .tier-features li {
+      line-height: 1.28;
+    }
+    .tier-cta {
+      margin-top: 0;
+      align-self: end;
+      min-height: 56px;
+    }
+
+    /* Full-width yellow GrooveDuck footer. */
+    .site-footer {
+      padding: 74px 0 26px;
+      background: var(--primary);
+      border-top: 1.5px solid var(--text);
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: minmax(250px,1.35fr) repeat(4,minmax(130px,.8fr));
+      gap: 42px;
+      align-items: start;
+    }
+    .footer-brand-block {
+      display: grid;
+      gap: 16px;
+      max-width: 330px;
+    }
+    .footer-brand-row {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+    .footer-brand-title {
+      font-family: 'Bubblegum Sans', cursive;
+      font-size: 34px;
+      line-height: 1;
+    }
+    .footer-brand-block p {
+      margin: 0;
+      font-size: 10px;
+      line-height: 1.7;
+      max-width: 300px;
+    }
+    .footer-column h3 {
+      font-family: 'Intel One Mono', monospace;
+      font-size: 9px;
+      line-height: 1;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin: 5px 0 18px;
+    }
+    .footer-column nav {
+      display: grid;
+      gap: 12px;
+    }
+    .footer-column a {
+      width: max-content;
+      max-width: 100%;
+      position: relative;
+      text-decoration: none;
+      font-size: 10px;
+      line-height: 1.35;
+      transition: transform .22s var(--ease), opacity .22s var(--ease);
+    }
+    .footer-column a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 100%;
+      bottom: -3px;
+      height: 1.5px;
+      background: var(--text);
+      transition: right .22s var(--ease);
+    }
+    .footer-column a:hover {
+      transform: translateX(4px);
+    }
+    .footer-column a:hover::after { right: 0; }
+    .footer-bottom {
+      margin-top: 52px;
+      padding-top: 18px;
+      border-top: 1.5px solid var(--text);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      font-size: 8px;
+      letter-spacing: .04em;
+    }
+    .footer-bottom-links {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .footer-bottom a { text-decoration: none; border-bottom: 1px solid transparent; }
+    .footer-bottom a:hover { border-color: var(--text); }
+
+    @media (max-width: 980px) {
+      .scroll-progress { top: 96px; }
+      .moments-carousel { grid-template-columns: 46px minmax(0,1fr) 46px; gap: 8px; }
+      .moments-arrow { width: 46px; height: 46px; }
+      .moment-card { flex-basis: 260px; min-width: 260px; }
+      .tier-card {
+        min-height: 760px;
+        grid-template-rows: 28px 54px 76px 276px 142px 58px;
+      }
+      .tier-mascot { height: 276px; }
+      .footer-grid { grid-template-columns: 1.2fr repeat(2,1fr); }
+      .footer-brand-block { grid-column: 1 / -1; max-width: 560px; }
+    }
+
+    @media (max-width: 640px) {
+      .scroll-progress { top: 88px; }
+      .moments-carousel { grid-template-columns: 42px minmax(0,1fr) 42px; gap: 7px; }
+      .moments-arrow { width: 42px; height: 42px; border-radius: 14px; }
+      .moment-card { flex-basis: 78vw; min-width: 235px; }
+      .tier-card {
+        min-height: auto;
+        grid-template-rows: auto auto auto 240px auto 56px;
+        gap: 8px;
+      }
+      .tier-mascot { height: 240px; }
+      .tier-features { padding: 10px 0 16px; align-self: start; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 34px 22px; }
+      .footer-brand-block { grid-column: 1 / -1; }
+      .footer-bottom { align-items: flex-start; flex-direction: column; }
+    }
+
+
+    /* GrooveDuck v12 — cleanup, opposite carousel motion, spacing and fuller footer */
+
+    /* Remove the old pricing teaser and tighten the handoff into the footer. */
+    .pricing-note { display: none !important; }
+    .pricing-section { padding-bottom: 78px; }
+
+    /* The actual DJ mixing canvas uses the official accent pink. */
+    .mascot-frame { background: #FDB4A8 !important; }
+
+    /* Give every numbered section label equal breathing room above and below. */
+    .section-head,
+    .ai-moods-head,
+    .moments-head,
+    .pricing-head {
+      padding-top: 16px;
+    }
+    .section-head > div > .kicker,
+    .ai-moods-head > div > .kicker,
+    .moments-head > div > .kicker,
+    .pricing-head > div > .kicker {
+      margin-top: 0;
+      margin-bottom: 16px;
+    }
+    .moments-section { padding-top: 16px; }
+
+    /* Richer, fuller footer while keeping the same GrooveDuck yellow world. */
+    .site-footer {
+      padding: 58px 0 24px;
+      background: var(--primary);
+      border-top: 1.5px solid var(--text);
+      position: relative;
+      overflow: hidden;
+    }
+    .site-footer::before {
+      content: "";
+      position: absolute;
+      width: 440px;
+      height: 440px;
+      border: 2px dashed rgba(0,0,0,.12);
+      border-radius: 50%;
+      right: -160px;
+      bottom: -240px;
+      pointer-events: none;
+    }
+    .footer-cta {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.35fr .65fr;
+      align-items: center;
+      gap: 34px;
+      padding: 30px 32px;
+      margin-bottom: 28px;
+      background: var(--accent);
+      border: 1.5px solid var(--text);
+      border-radius: var(--radius);
+      box-shadow: 8px 9px 0 var(--text);
+    }
+    .footer-kicker {
+      display: block;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: .15em;
+      margin-bottom: 10px;
+    }
+    .footer-cta h2 {
+      font-size: clamp(38px, 4.2vw, 62px);
+      line-height: .98;
+      margin: 0;
+    }
+    .footer-cta p {
+      max-width: 620px;
+      margin: 12px 0 0;
+      font-size: 10px;
+      line-height: 1.7;
+    }
+    .footer-cta-actions {
+      display: grid;
+      gap: 10px;
+    }
+    .footer-main-btn,
+    .footer-ghost-btn {
+      min-height: 54px;
+      padding: 0 16px;
+      border: 1.5px solid var(--text);
+      border-radius: 15px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 9px;
+      font-weight: 700;
+      transition: transform .22s var(--ease), box-shadow .22s var(--ease), background .22s var(--ease);
+    }
+    .footer-main-btn {
+      background: var(--green);
+      color: #fff;
+      box-shadow: 4px 5px 0 var(--text);
+    }
+    .footer-main-btn:hover {
+      transform: translate(-1px,-2px);
+      box-shadow: 6px 7px 0 var(--text);
+    }
+    .footer-ghost-btn { background: #fff; }
+    .footer-ghost-btn:hover { transform: translateY(-2px); background: var(--gray); }
+
+    .footer-trust-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 17px 20px;
+      margin: 0 0 42px;
+      border-top: 1.5px solid var(--text);
+      border-bottom: 1.5px solid var(--text);
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: .12em;
+    }
+    .footer-trust-row i {
+      width: 7px;
+      height: 7px;
+      background: var(--secondary);
+      border: 1px solid var(--text);
+      transform: rotate(45deg);
+    }
+    .footer-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(250px,1.45fr) repeat(5,minmax(120px,.75fr));
+      gap: 36px;
+      align-items: start;
+    }
+    .footer-brand-block {
+      display: grid;
+      gap: 16px;
+      max-width: 340px;
+    }
+    .footer-brand-pills {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+    .footer-brand-pills span {
+      padding: 7px 9px;
+      border: 1px solid var(--text);
+      border-radius: 999px;
+      background: rgba(255,255,255,.58);
+      font-size: 7.5px;
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+    .footer-column h3 { margin-top: 4px; }
+    .footer-column nav { gap: 11px; }
+    .footer-column a { font-size: 9px; }
+    .footer-bottom {
+      position: relative;
+      z-index: 1;
+      margin-top: 48px;
+      padding-top: 19px;
+    }
+    .footer-bottom-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .footer-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--secondary);
+      border: 1px solid var(--text);
+    }
+
+    @media (max-width: 1180px) {
+      .footer-grid { grid-template-columns: minmax(240px,1.25fr) repeat(3,1fr); }
+      .footer-brand-block { grid-row: span 2; }
+    }
+    @media (max-width: 980px) {
+      .footer-cta { grid-template-columns: 1fr; }
+      .footer-cta-actions { grid-template-columns: 1fr 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr 1fr; }
+      .footer-brand-block { grid-column: 1 / -1; grid-row: auto; max-width: 620px; }
+    }
+    @media (max-width: 640px) {
+      .footer-cta { padding: 24px 20px; }
+      .footer-cta-actions { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 34px 22px; }
+      .footer-brand-block { grid-column: 1 / -1; }
+      .footer-trust-row { justify-content: flex-start; }
+      .footer-bottom-left { align-items: flex-start; flex-direction: column; }
+      .footer-dot { display: none; }
+    }
+
+
+
+    /* GrooveDuck v14 — light-mode polish */
+
+    /* Navigation actions stay simple while Light Mode is the only active theme. */
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      min-width: max-content;
+    }
+
+    /* The head stays optically centred inside every small GrooveDuck logo tile. */
+    .brand-logo-wrap,
+    .footer-logo-wrap {
+      display: grid;
+      place-items: center;
+    }
+    .brand-logo-img,
+    .footer-logo-wrap img {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: contain !important;
+      object-position: 50% 51.5% !important;
+      transform: translateY(1px) scale(.97) !important;
+      transform-origin: center !important;
+    }
+    .chat-duck {
+      background-position: 50% 51.5% !important;
+      background-size: 100% !important;
+    }
+
+    /* The DJ-mixing canvas is white again in Light Mode. */
+    .mascot-frame { background: #FFFFFF !important; }
+
+    /* Pricing: same two-line title rhythm on all three plans, with a tighter card. */
+    .pricing-grid { align-items: stretch; }
+    .tier-card {
+      height: 680px;
+      min-height: 680px;
+      display: grid;
+      grid-template-rows: 24px 88px 36px 54px 235px minmax(96px, 1fr) 54px;
+      gap: 0;
+      padding: 26px 22px 18px;
+      align-content: start;
+    }
+    .tier-topline { align-self: start; }
+    .tier-card h3 {
+      margin: 7px 0 0;
+      align-self: start;
+      display: grid;
+      align-content: start;
+      gap: 0;
+      font-size: clamp(31px, 2.55vw, 42px);
+      line-height: .94;
+    }
+    .tier-card h3 span { display: block; }
+    .tier-price {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin: 0;
+      min-width: 0;
+      align-self: start;
+    }
+    .tier-price strong {
+      font-family: 'Bubblegum Sans', cursive;
+      font-size: 27px;
+      line-height: 1;
+      font-weight: 400;
+    }
+    .tier-price span {
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .tier-card .tier-copy {
+      min-height: 0;
+      margin: 2px 0 0;
+      align-self: start;
+    }
+    .tier-mascot {
+      height: 235px;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      overflow: visible;
+      transform: translateY(-7px);
+    }
+    .tier-mascot img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center center;
+    }
+    .tier-free .tier-mascot img { width: 82%; height: 82%; }
+    .tier-medium .tier-mascot img { width: 92%; height: 92%; }
+    .tier-premium .tier-mascot img { width: 100%; height: 100%; }
+    .tier-features {
+      margin: -5px 0 0;
+      min-height: 0;
+      gap: 6px;
+      align-self: stretch;
+      align-content: start;
+      padding-top: 10px;
+      display: grid;
+    }
+    .tier-features li { line-height: 1.24; }
+    .tier-cta {
+      margin-top: 0;
+      align-self: end;
+      min-height: 52px;
+    }
+
+    /* Footer begins directly after pricing. */
+    .site-footer { padding-top: 42px; }
+    .footer-trust-row { margin-top: 0; }
+
+    @media (max-width: 980px) {
+      .tier-card {
+        height: 670px;
+        min-height: 670px;
+        grid-template-rows: 24px 84px 36px 54px 225px minmax(96px, 1fr) 52px;
+      }
+      .tier-mascot { height: 225px; }
+    }
+    @media (max-width: 640px) {
+      .nav { gap: 12px; }
+      .nav-actions { gap: 6px; }
+      .tier-card {
+        height: auto;
+        min-height: 0;
+        grid-template-rows: auto auto auto auto 220px auto 54px;
+        gap: 7px;
+      }
+      .tier-card h3 { font-size: 38px; line-height: .94; }
+      .tier-price { margin-top: 0; }
+      .tier-mascot { height: 220px; transform: translateY(-3px); }
+      .tier-features { margin-top: -2px; padding-bottom: 6px; }
+    }
+
+
+    /* GrooveDuck v15 — definitive pricing + consistent section rhythm */
+
+    /* Use the compact Mascot Moments spacing as the reference for every numbered section. */
+    #builder.section {
+      padding-top: 42px;
+      padding-bottom: 92px;
+    }
+    .ai-section .section.ai-moods-section {
+      padding-top: 42px;
+    }
+    .moments-section.section {
+      padding-top: 42px;
+    }
+    .pricing-section {
+      padding-top: 42px;
+    }
+    .section-head,
+    .ai-moods-head,
+    .moments-head,
+    .pricing-head {
+      padding-top: 0 !important;
+    }
+    .section-head > div > .kicker,
+    .ai-moods-head > div > .kicker,
+    .moments-head > div > .kicker,
+    .pricing-head > div > .kicker {
+      margin-top: 0 !important;
+      margin-bottom: 15px !important;
+    }
+
+    /* Pricing has a strict top-to-bottom flow. Images cannot overlap copy or feature text. */
+    .pricing-grid {
+      align-items: stretch;
+      gap: 16px;
+    }
+    .tier-card {
+      height: auto !important;
+      min-height: 890px !important;
+      display: flex !important;
+      flex-direction: column;
+      padding: 26px 22px 20px;
+      overflow: hidden;
+    }
+    .tier-topline {
+      min-height: 30px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      flex: 0 0 auto;
+    }
+    .tier-badges {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .popular-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 25px;
+      padding: 0 8px;
+      border: 1.5px solid var(--text);
+      border-radius: 999px;
+      background: var(--primary);
+      box-shadow: 2px 3px 0 var(--text);
+      font-size: 7px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: .1em;
+      white-space: nowrap;
+    }
+    .tier-card h3 {
+      min-height: 78px;
+      margin: 8px 0 0;
+      display: grid;
+      align-content: start;
+      font-size: clamp(31px, 2.55vw, 42px);
+      line-height: .94;
+      flex: 0 0 auto;
+    }
+    .tier-price {
+      min-height: 36px;
+      margin: 0;
+      flex: 0 0 auto;
+    }
+    .tier-card .tier-copy {
+      min-height: 54px;
+      margin: 2px 0 0;
+      flex: 0 0 auto;
+    }
+    .tier-mascot {
+      width: 100%;
+      height: 230px !important;
+      min-height: 230px;
+      margin: 2px 0 12px !important;
+      padding: 0 !important;
+      display: grid;
+      place-items: center;
+      overflow: hidden !important;
+      transform: none !important;
+      flex: 0 0 230px;
+      position: relative;
+      z-index: 1;
+    }
+    .tier-mascot img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center center;
+      max-width: 100%;
+      max-height: 100%;
+    }
+    .tier-free .tier-mascot img { width: 78%; height: 78%; }
+    .tier-medium .tier-mascot img { width: 88%; height: 88%; }
+    .tier-premium .tier-mascot img { width: 94%; height: 94%; }
+    .tier-features {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      min-height: 0;
+      margin: 0 0 18px !important;
+      padding: 0 !important;
+      display: grid;
+      gap: 6px;
+      align-content: start;
+      align-self: stretch;
+      flex: 0 0 auto;
+      font-size: 8.3px;
+      line-height: 1.3;
+    }
+    .tier-features li {
+      min-height: 18px;
+      line-height: 1.3;
+    }
+    .tier-cta {
+      width: 100%;
+      min-height: 54px;
+      margin-top: auto !important;
+      flex: 0 0 54px;
+    }
+
+    @media (max-width: 1180px) and (min-width: 981px) {
+      .tier-card { min-height: 920px !important; padding-left: 18px; padding-right: 18px; }
+      .tier-card h3 { font-size: 34px; }
+      .tier-topline { font-size: 7px; }
+      .popular-badge { font-size: 6.5px; padding: 0 6px; }
+      .tier-mascot { height: 218px !important; min-height: 218px; flex-basis: 218px; }
+      .tier-features { font-size: 8px; }
+    }
+    @media (max-width: 980px) {
+      #builder.section,
+      .ai-section .section.ai-moods-section,
+      .moments-section.section,
+      .pricing-section { padding-top: 36px; }
+      .tier-card { min-height: 0 !important; }
+      .tier-mascot { height: 260px !important; min-height: 260px; flex-basis: 260px; }
+    }
+    @media (max-width: 640px) {
+      #builder.section,
+      .ai-section .section.ai-moods-section,
+      .moments-section.section,
+      .pricing-section { padding-top: 30px; }
+      .tier-card { padding: 24px 18px 18px; }
+      .tier-topline { min-height: 54px; }
+      .tier-badges { max-width: 145px; }
+      .tier-card h3 { min-height: 72px; font-size: 38px; }
+      .tier-card .tier-copy { min-height: 0; margin-bottom: 8px; }
+      .tier-mascot { height: 230px !important; min-height: 230px; flex-basis: 230px; margin-bottom: 14px !important; }
+      .tier-features { font-size: 8.4px; gap: 7px; }
+    }
+
+  
+
+    /* GrooveDuck v16 — expanded builder, readable pricing and 3-frame mixing loop */
+    .mascot-frame .mixing-frame {
+      opacity: 0 !important;
+      animation: none !important;
+      transition: none !important;
+      mix-blend-mode: normal !important;
+      object-fit: contain;
+      object-position: center;
+      transform: none !important;
+    }
+    .mascot-frame .mixing-frame.is-active { opacity: 1 !important; }
+
+    /* Full Set Builder controls. */
+    .builder-number-field,
+    .bpm-range,
+    .select-wrap {
+      min-height: 46px;
+      border: 1.5px solid var(--text);
+      border-radius: 14px;
+      background: var(--background);
+    }
+    .builder-number-field {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+    }
+    .builder-number-field input,
+    .bpm-range input,
+    .select-wrap select,
+    .builder-notes {
+      font: inherit;
+      color: var(--text);
+      outline: none;
+    }
+    .builder-number-field input {
+      width: 92px;
+      border: 0;
+      background: transparent;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .builder-number-field span { font-size: 8px; font-weight: 700; color: var(--ink-64); text-transform: uppercase; letter-spacing: .1em; }
+    .bpm-range {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 11px;
+    }
+    .bpm-range label { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 8px; min-width: 0; }
+    .bpm-range label > span { font-size: 7px; font-weight: 800; letter-spacing: .12em; color: var(--ink-48); }
+    .bpm-range input {
+      min-width: 0;
+      width: 100%;
+      border: 0;
+      background: var(--yellow-soft);
+      border-radius: 9px;
+      padding: 7px 8px;
+      font-size: 10px;
+      font-weight: 800;
+    }
+    .bpm-range > b { font-size: 14px; }
+    .bpm-unit { font-size: 8px; font-weight: 800; }
+    .energy-segmented { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .energy-segmented button { padding: 4px 7px; line-height: 1.2; }
+    .select-wrap { position: relative; display: flex; align-items: center; }
+    .select-wrap select {
+      appearance: none;
+      width: 100%;
+      height: 44px;
+      border: 0;
+      background: transparent;
+      padding: 0 38px 0 12px;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .select-wrap > span { position: absolute; right: 13px; pointer-events: none; font-size: 14px; }
+    .builder-notes {
+      display: block;
+      width: 100%;
+      min-height: 86px;
+      resize: vertical;
+      border: 1.5px solid var(--text);
+      border-radius: 14px;
+      background: var(--background);
+      padding: 11px 12px;
+      font-size: 9px;
+      line-height: 1.55;
+    }
+    .builder-notes::placeholder { color: var(--ink-48); }
+
+    /* Keep every pricing illustration fully visible before any feature copy begins. */
+    .tier-card { min-height: 955px !important; }
+    .tier-mascot {
+      height: 288px !important;
+      min-height: 288px !important;
+      flex-basis: 288px !important;
+      margin: 5px 0 24px !important;
+      overflow: hidden !important;
+    }
+    .tier-mascot img {
+      object-fit: contain !important;
+      object-position: center center !important;
+      transform: none !important;
+    }
+    .tier-free .tier-mascot img { width: 74% !important; height: 74% !important; }
+    .tier-medium .tier-mascot img { width: 84% !important; height: 84% !important; }
+    .tier-premium .tier-mascot img { width: 90% !important; height: 90% !important; }
+    .tier-features { margin-top: 0 !important; position: relative; z-index: 3; }
+    .tier-features strong { font-weight: 900; }
+
+    @media (max-width: 1180px) and (min-width: 981px) {
+      .tier-card { min-height: 980px !important; }
+      .tier-mascot { height: 270px !important; min-height: 270px !important; flex-basis: 270px !important; margin-bottom: 22px !important; }
+    }
+    @media (max-width: 980px) {
+      .tier-card { min-height: 0 !important; }
+      .tier-mascot { height: 300px !important; min-height: 300px !important; flex-basis: 300px !important; }
+    }
+    @media (max-width: 640px) {
+      .bpm-range { grid-template-columns: 1fr auto 1fr; }
+      .bpm-unit { grid-column: 1 / -1; justify-self: end; margin-top: -4px; }
+      .energy-segmented { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .tier-mascot { height: 260px !important; min-height: 260px !important; flex-basis: 260px !important; margin-bottom: 20px !important; }
+    }
+
+
+    /* GrooveDuck v17 — vertical app rail, top skateboard progress, smooth custom controls. */
+    :root {
+      --sidebar-w: 148px;
+      --secondary: #FFA81E;
+      --orange-soft: rgba(255,168,30,.20);
+    }
+
+    html { scroll-padding-top: 100px !important; }
+
+    /* Vertical navigation rail. */
+    .nav-wrap {
+      position: fixed !important;
+      top: 16px !important;
+      left: 16px !important;
+      bottom: 16px !important;
+      width: var(--sidebar-w) !important;
+      padding: 0 !important;
+      z-index: 80 !important;
+      pointer-events: none;
+    }
+    .nav-wrap > .container {
+      width: 100% !important;
+      height: 100% !important;
+      margin: 0 !important;
+    }
+    .nav {
+      pointer-events: auto;
+      width: 100%;
+      height: 100%;
+      display: flex !important;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px !important;
+      padding: 13px 10px 11px !important;
+      background: rgba(255,255,255,.94) !important;
+      border: 1.5px solid var(--text) !important;
+      border-radius: 22px !important;
+      box-shadow: 7px 7px 0 rgba(250,219,52,.82), 0 20px 44px rgba(0,0,0,.08) !important;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      transition: transform .32s var(--ease-smooth), box-shadow .32s var(--ease-smooth);
+    }
+    .nav:hover { box-shadow: 9px 9px 0 rgba(250,219,52,.9), 0 24px 50px rgba(0,0,0,.10) !important; }
+    .brand {
+      width: 100%;
+      min-width: 0 !important;
+      display: flex !important;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px !important;
+      padding: 4px 4px 13px;
+      border-bottom: 1px dashed rgba(0,0,0,.24);
+    }
+    .brand-logo-wrap { width: 54px !important; height: 54px !important; border-radius: 17px !important; flex: 0 0 54px; }
+    .brand-name { font-size: 20px !important; text-align: center; white-space: nowrap; }
+    .nav-menu {
+      width: 100%;
+      display: flex !important;
+      flex-direction: column;
+      align-items: stretch !important;
+      justify-content: flex-start !important;
+      gap: 5px !important;
+      margin: 1px 0 0 !important;
+    }
+    .nav-item { width: 100%; }
+    .nav-link {
+      width: 100%;
+      min-height: 44px !important;
+      padding: 0 10px !important;
+      display: flex !important;
+      justify-content: space-between;
+      border: 1px solid transparent !important;
+      border-radius: 13px !important;
+      font-size: 10.5px !important;
+      font-weight: 700 !important;
+      letter-spacing: .01em;
+      transition: background .24s var(--ease), transform .24s var(--ease), border-color .24s var(--ease), box-shadow .24s var(--ease) !important;
+    }
+    .nav-link:hover,
+    .nav-item:focus-within > .nav-link {
+      background: var(--yellow-soft) !important;
+      border-color: var(--text) !important;
+      transform: translateX(3px) !important;
+      box-shadow: 3px 3px 0 var(--primary);
+    }
+    .chev { flex: 0 0 10px; }
+    .nav-actions {
+      width: 100%;
+      margin-top: auto !important;
+      display: block !important;
+    }
+    .nav-cta {
+      width: 100%;
+      min-height: 51px;
+      padding: 0 8px !important;
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border-radius: 14px !important;
+      font-size: 9.5px !important;
+      text-align: center;
+      box-shadow: 4px 5px 0 var(--text) !important;
+      transition: transform .25s var(--ease), box-shadow .25s var(--ease) !important;
+    }
+    .nav-cta:hover { transform: translate(-1px,-2px) !important; box-shadow: 6px 7px 0 var(--text) !important; }
+
+    /* Product/Explore panels open to the right of the vertical rail. */
+    .nav-item .dropdown {
+      top: 0 !important;
+      left: calc(100% + 16px) !important;
+      transform: translateX(-8px) translateY(0) scale(.985) !important;
+      transform-origin: left top;
+      box-shadow: 6px 7px 0 var(--primary), var(--shadow-soft) !important;
+    }
+    .nav-item:hover .dropdown,
+    .nav-item:focus-within .dropdown {
+      transform: translateX(0) translateY(0) scale(1) !important;
+    }
+    .dropdown::before {
+      top: 0 !important;
+      bottom: 0 !important;
+      left: -18px !important;
+      right: auto !important;
+      width: 20px !important;
+      height: auto !important;
+    }
+
+    /* Main canvas makes room for the app rail. */
+    main,
+    .site-footer { margin-left: calc(var(--sidebar-w) + 28px) !important; }
+
+    /* The skateboard is now the only horizontal bar at the top. */
+    .scroll-progress {
+      position: fixed !important;
+      top: 7px !important;
+      left: calc(var(--sidebar-w) + 48px) !important;
+      right: 24px !important;
+      height: 80px !important;
+      z-index: 68 !important;
+      pointer-events: none;
+    }
+    .scroll-rail { height: 80px !important; }
+    .scroll-rail::before {
+      bottom: 13px !important;
+      height: 10px !important;
+      border-radius: 999px !important;
+      background: var(--primary) !important;
+      border: 1.5px solid var(--text) !important;
+      box-shadow: 0 3px 0 rgba(0,0,0,.08) !important;
+    }
+    .scroll-duck {
+      width: 72px !important;
+      bottom: 0 !important;
+      transition: filter .2s ease;
+    }
+    .hero-v5 { padding-top: 108px !important; min-height: 740px !important; }
+
+    /* Pricing: each feature is one readable sentence, not separate grid fragments. */
+    .tier-features li {
+      display: flex !important;
+      align-items: flex-start !important;
+      gap: 8px !important;
+      width: 100%;
+      min-width: 0;
+      white-space: normal;
+      overflow-wrap: normal !important;
+      word-break: normal !important;
+      line-height: 1.45 !important;
+    }
+    .tier-features li::before {
+      flex: 0 0 16px !important;
+      margin-top: -1px;
+    }
+    .tier-features li strong {
+      display: inline !important;
+      flex: 0 0 auto;
+      white-space: normal;
+      font-weight: 900 !important;
+    }
+
+    /* GrooveDuck custom dropdown system. */
+    .gd-dropdown {
+      position: relative;
+      width: 100%;
+      z-index: 12;
+      font-family: 'Intel One Mono', monospace;
+    }
+    .gd-dropdown.is-open { z-index: 90; }
+    .gd-dropdown-trigger {
+      width: 100%;
+      min-height: 50px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      border: 1.5px solid var(--text);
+      border-radius: 15px;
+      background: rgba(255,255,255,.96);
+      color: var(--text);
+      box-shadow: 3px 4px 0 rgba(250,219,52,.72);
+      cursor: pointer;
+      text-align: left;
+      font-size: 10px;
+      font-weight: 800;
+      transition: transform .22s var(--ease), box-shadow .22s var(--ease), background .22s var(--ease);
+    }
+    .gd-dropdown-trigger:hover,
+    .gd-dropdown.is-open .gd-dropdown-trigger {
+      background: #fff;
+      transform: translateY(-1px);
+      box-shadow: 4px 5px 0 var(--secondary);
+    }
+    .gd-dropdown-value { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .gd-dropdown-suffix {
+      margin-left: auto;
+      font-size: 7.5px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--ink-64);
+    }
+    .gd-dropdown-chevron {
+      margin-left: auto;
+      width: 24px;
+      height: 24px;
+      flex: 0 0 24px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--text);
+      border-radius: 9px;
+      background: var(--primary);
+      font-size: 13px;
+      line-height: 1;
+      transition: transform .22s var(--ease), background .22s var(--ease);
+    }
+    .gd-dropdown-suffix + .gd-dropdown-chevron { margin-left: 0; }
+    .gd-dropdown.is-open .gd-dropdown-chevron { transform: rotate(180deg); background: var(--secondary); }
+    .gd-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      max-height: 224px;
+      padding: 7px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      border: 1.5px solid var(--text);
+      border-radius: 15px;
+      background: #fff;
+      box-shadow: 5px 6px 0 var(--secondary), 0 16px 32px rgba(0,0,0,.12);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-6px) scale(.985);
+      transform-origin: top;
+      transition: opacity .2s var(--ease), transform .2s var(--ease), visibility .2s;
+      scrollbar-width: thin;
+      scrollbar-color: var(--secondary) rgba(0,0,0,.08);
+    }
+    .gd-dropdown-menu::-webkit-scrollbar { width: 8px; }
+    .gd-dropdown-menu::-webkit-scrollbar-track { background: rgba(0,0,0,.06); border-radius: 999px; }
+    .gd-dropdown-menu::-webkit-scrollbar-thumb { background: var(--secondary); border: 1px solid var(--text); border-radius: 999px; }
+    .gd-dropdown.is-open .gd-dropdown-menu {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
+    .gd-dropdown-option {
+      width: 100%;
+      min-height: 36px;
+      padding: 0 11px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      text-align: left;
+      font-size: 9px;
+      font-weight: 650;
+      transition: background .16s ease, transform .16s ease, border-color .16s ease;
+    }
+    .gd-dropdown-option:hover { background: var(--yellow-soft); border-color: rgba(0,0,0,.18); transform: translateX(2px); }
+    .gd-dropdown-option.is-selected { background: var(--secondary); border-color: var(--text); font-weight: 850; }
+
+    .bpm-range-v17 {
+      min-height: 66px !important;
+      display: grid !important;
+      grid-template-columns: minmax(0,1fr) auto minmax(0,1fr) auto !important;
+      gap: 10px !important;
+      align-items: center !important;
+      padding: 9px 10px !important;
+      border: 1.5px solid var(--text) !important;
+      border-radius: 15px !important;
+      background: rgba(255,255,255,.92) !important;
+      box-shadow: 3px 4px 0 rgba(250,219,52,.55);
+    }
+    .bpm-dropdown-group { min-width: 0; display: grid; grid-template-columns: auto minmax(0,1fr); gap: 8px; align-items: center; }
+    .bpm-mini-label { font-size: 7px; font-weight: 850; letter-spacing: .12em; color: var(--ink-48); }
+    .gd-dropdown-compact .gd-dropdown-trigger {
+      min-height: 42px;
+      padding: 0 8px 0 10px;
+      border-radius: 12px;
+      box-shadow: none;
+      background: rgba(250,219,52,.22);
+    }
+    .gd-dropdown-compact .gd-dropdown-trigger:hover,
+    .gd-dropdown-compact.is-open .gd-dropdown-trigger { box-shadow: 3px 3px 0 var(--secondary); }
+    .gd-dropdown-compact .gd-dropdown-chevron { width: 21px; height: 21px; flex-basis: 21px; border-radius: 8px; }
+    .bpm-arrow { font-size: 15px !important; }
+    .bpm-unit { font-size: 8px !important; font-weight: 850 !important; }
+
+    @media (max-width: 1200px) {
+      :root { --sidebar-w: 126px; }
+      .brand-name { font-size: 18px !important; }
+      .nav-link { font-size: 9.5px !important; padding: 0 8px !important; }
+      .pricing-grid { grid-template-columns: 1fr !important; }
+      .tier-card { max-width: 760px; width: 100%; margin-inline: auto; }
+    }
+    @media (max-width: 900px) {
+      :root { --sidebar-w: 96px; }
+      .brand-name { display: none !important; }
+      .brand { padding-bottom: 10px; }
+      .brand-logo-wrap { width: 48px !important; height: 48px !important; flex-basis: 48px; }
+      .nav-link { font-size: 8.5px !important; padding: 0 7px !important; }
+      .nav-cta { font-size: 8.4px !important; }
+      main, .site-footer { margin-left: calc(var(--sidebar-w) + 20px) !important; }
+      .scroll-progress { left: calc(var(--sidebar-w) + 34px) !important; right: 16px !important; }
+      .hero-v5 { padding-top: 102px !important; }
+    }
+    @media (max-width: 640px) {
+      .nav-wrap { left: 8px !important; top: 8px !important; bottom: 8px !important; width: 82px !important; }
+      main, .site-footer { margin-left: 92px !important; }
+      .scroll-progress { left: 102px !important; right: 10px !important; top: 3px !important; }
+      .nav-link { font-size: 7.5px !important; min-height: 40px !important; }
+      .nav-cta { font-size: 7.4px !important; }
+      .bpm-range-v17 { grid-template-columns: 1fr auto 1fr !important; }
+      .bpm-unit { grid-column: 1 / -1; justify-self: end; }
+    }
+
+
+
+    /* GrooveDuck v18 — floating rail polish, larger pricing mascots and cozy builder art. */
+
+    /* Let the page live behind the left navigation instead of blocking it with one tall white slab. */
+    .nav {
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      padding: 0 !important;
+      gap: 10px !important;
+    }
+    .nav:hover { box-shadow: none !important; }
+    .brand {
+      pointer-events: auto;
+      background: rgba(255,255,255,.96);
+      border: 1.5px solid var(--text);
+      border-radius: 20px;
+      box-shadow: 5px 6px 0 rgba(250,219,52,.86), 0 14px 30px rgba(0,0,0,.07);
+      padding: 10px 6px 12px !important;
+    }
+    .nav-menu {
+      pointer-events: auto;
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      gap: 7px !important;
+    }
+    .nav-link {
+      position: relative;
+      overflow: hidden;
+      background: rgba(255,255,255,.96) !important;
+      border: 1.25px solid var(--text) !important;
+      box-shadow: 3px 3px 0 rgba(250,219,52,.74);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .nav-link:hover,
+    .nav-item:focus-within > .nav-link {
+      background: #fff !important;
+      box-shadow: 4px 4px 0 var(--primary) !important;
+    }
+    .nav-actions { pointer-events: auto; background: transparent !important; }
+
+    /* Page/section backgrounds can continue behind the floating rail. */
+    main,
+    .site-footer { margin-left: 0 !important; }
+
+    /* Product and Explore arrows now match a left rail: left at rest, right when opened/hovered. */
+    .chev {
+      width: 11px;
+      height: 11px;
+      transition: transform .24s var(--ease-smooth);
+      transform-origin: center;
+    }
+    .nav-item:hover > .nav-link .chev,
+    .nav-item:focus-within > .nav-link .chev {
+      transform: rotate(180deg);
+    }
+
+    /* CueKoala teaser — intentionally taped off until the feature launches. */
+    .nav-soon { pointer-events: none; }
+    .cuekoala-link {
+      min-height: 48px !important;
+      cursor: not-allowed;
+      isolation: isolate;
+    }
+    .cuekoala-name { opacity: .72; }
+    .cue-tape {
+      position: absolute;
+      right: -17px;
+      top: 13px;
+      width: 105px;
+      height: 20px;
+      display: grid;
+      place-items: center;
+      transform: rotate(-8deg);
+      border: 1px solid var(--text);
+      background:
+        repeating-linear-gradient(135deg, #000 0 8px, #000 8px 10px, var(--primary) 10px 18px, var(--primary) 18px 20px);
+      color: #fff;
+      text-shadow: 0 1px 0 #000;
+      font-size: 5.6px;
+      font-weight: 900;
+      letter-spacing: .12em;
+      white-space: nowrap;
+      z-index: 2;
+      box-shadow: 2px 2px 0 rgba(0,0,0,.14);
+    }
+
+    /* Lower the yellow road so the skateboard wheels visually ride on it. */
+    .scroll-rail::before { bottom: 6px !important; }
+
+    /* Mascot Moments now sits on the site's white base canvas. */
+    .moments-section { background: #FFFFFF !important; }
+
+    /* Pricing mascots are a touch larger, but remain fully contained above the features. */
+    .tier-free .tier-mascot img { width: 82% !important; height: 82% !important; }
+    .tier-medium .tier-mascot img { width: 94% !important; height: 94% !important; }
+    .tier-premium .tier-mascot img { width: 100% !important; height: 100% !important; }
+
+    /* Fill the open yellow builder intro with the new Cozy Corner illustration. */
+    #builder { overflow: hidden; }
+    .builder-section-head {
+      align-items: stretch !important;
+      gap: clamp(28px, 4vw, 62px) !important;
+      margin-bottom: 26px !important;
+    }
+    .builder-head-copy {
+      flex: 1 1 58%;
+      min-width: 0;
+      align-self: flex-start;
+    }
+    .builder-head-side {
+      flex: 0 1 430px;
+      min-width: 300px;
+      min-height: 330px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .builder-cozy-art {
+      width: min(410px, 100%);
+      max-height: 270px;
+      object-fit: contain;
+      object-position: right center;
+      margin: -22px -8px 4px 0;
+      filter: drop-shadow(0 10px 14px rgba(0,0,0,.05));
+      transform: rotate(.25deg);
+    }
+    .builder-head-side p {
+      width: 100%;
+      max-width: 430px !important;
+      margin: 0 !important;
+      align-self: flex-end;
+    }
+
+    @media (max-width: 1280px) and (min-width: 901px) {
+      main .container,
+      .site-footer .container {
+        width: calc(100% - var(--sidebar-w) - 68px);
+        margin-left: calc(var(--sidebar-w) + 44px);
+        margin-right: 24px;
+      }
+      .builder-head-side { flex-basis: 360px; min-width: 280px; }
+      .builder-cozy-art { max-height: 235px; }
+    }
+    @media (max-width: 900px) {
+      .builder-section-head { flex-direction: column !important; }
+      .builder-head-side { width: 100%; min-width: 0; min-height: 0; align-items: flex-start; }
+      .builder-cozy-art { width: min(420px, 82vw); max-height: 260px; margin: 0 auto 8px; object-position: center; }
+      .builder-head-side p { max-width: 680px !important; }
+    }
+    @media (max-width: 640px) {
+      .scroll-rail::before { bottom: 5px !important; }
+      .cue-tape { width: 88px; font-size: 5px; right: -16px; }
+    }
+
+
+
+    /* GrooveDuck 1.9 — calmer viewport, balanced canvas and responsive energy dots. */
+    @media (min-width: 901px) {
+      /* Center the page in the usable canvas: equal breathing room after the sidebar and at the right edge. */
+      main .container,
+      .site-footer .container {
+        width: calc(100% - var(--sidebar-w) - 64px) !important;
+        max-width: none !important;
+        margin-left: calc(var(--sidebar-w) + 40px) !important;
+        margin-right: 24px !important;
+      }
+
+      /* A calmer first viewport: keep the marquee visible on a normal laptop screen. */
+      .hero-v5 {
+        min-height: 660px !important;
+        padding-top: 92px !important;
+        padding-bottom: 32px !important;
+      }
+      .hero-grid-v5 {
+        grid-template-columns: minmax(0, 1.04fr) minmax(430px, .96fr) !important;
+        gap: clamp(34px, 3.2vw, 54px) !important;
+        align-items: center !important;
+      }
+      .hero-brand-title {
+        font-size: clamp(76px, 7.5vw, 124px) !important;
+        line-height: .9 !important;
+        max-width: 760px !important;
+      }
+      .hero-tagline {
+        margin-top: 14px !important;
+        font-size: clamp(27px, 2.55vw, 41px) !important;
+      }
+      .hero-slogan {
+        margin-top: 19px !important;
+        gap: 5px !important;
+        font-size: clamp(32px, 3.25vw, 50px) !important;
+      }
+      .hero-v5 .hero-copy {
+        margin-top: 18px !important;
+        max-width: 620px !important;
+        line-height: 1.68 !important;
+      }
+      .hero-actions { margin-top: 22px !important; }
+      .hero-proof { margin-top: 17px !important; }
+      .mascot-stage { min-height: 500px !important; }
+      .mascot-frame { inset: 68px 28px 24px !important; }
+
+      /* Slightly reduce headline scale outside the hero for a calmer overall rhythm. */
+      .section-head h2,
+      .ai-moods-head h2,
+      .moments-head h2,
+      .pricing-head h2 {
+        font-size: clamp(46px, 5.3vw, 76px) !important;
+      }
+    }
+
+    /* Builder intro: remove the explanatory paragraph and let the title/art sit lower together. */
+    #builder.section { padding-top: 70px !important; }
+    .builder-section-head {
+      align-items: center !important;
+      margin-bottom: 30px !important;
+    }
+    .builder-head-copy {
+      align-self: center !important;
+      padding-top: 12px;
+    }
+    .builder-head-side {
+      min-height: 275px !important;
+      justify-content: center !important;
+    }
+    .builder-cozy-art {
+      width: min(430px, 100%) !important;
+      max-height: 290px !important;
+      margin: 12px -8px 0 0 !important;
+    }
+
+    /* Dots stay visually attached to the selected energy path. JS animates cx/cy. */
+    .energy-chart .dot {
+      will-change: cx, cy;
+      filter: drop-shadow(0 1px 0 rgba(0,0,0,.08));
+    }
+
+    @media (max-width: 1180px) and (min-width: 901px) {
+      .hero-v5 { min-height: 640px !important; }
+      .hero-grid-v5 { grid-template-columns: minmax(0, 1fr) minmax(390px, .92fr) !important; }
+      .mascot-stage { min-height: 470px !important; }
+      .builder-cozy-art { max-height: 260px !important; }
+    }
+
+    @media (max-width: 900px) {
+      #builder.section { padding-top: 46px !important; }
+      .builder-head-copy { padding-top: 0; }
+      .builder-head-side { min-height: 0 !important; }
+      .builder-cozy-art { margin: 8px auto 0 !important; }
+    }
+</style>
+</head>
+<body>
+  <div class="page-shell">
+    <div class="nav-wrap">
+      <div class="container">
+        <nav class="nav" aria-label="Primary navigation">
+          <a href="#top" class="brand" aria-label="GrooveDuck home">
+            <span class="brand-logo-wrap" aria-hidden="true"><img class="brand-logo-img" src="assets/logo.png" alt=""></span>
+            <span class="brand-name">GrooveDuck</span>
+          </a>
+
+          <ul class="nav-menu">
+            <li class="nav-item">
+              <button class="nav-link" type="button">Product
+                <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M7.5 2.5 4 6l3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div class="dropdown">
+                <div class="drop-head"><span>Build with GrooveDuck</span><span class="drop-badge">Preview</span></div>
+                <div class="drop-grid">
+                  <a class="drop-card" href="#builder">
+                    <span class="drop-icon"><svg viewBox="0 0 24 24"><path d="M5 7h14M5 12h9M5 17h12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+                    <span class="drop-copy"><strong>Set Builder</strong><small>Turn your Rekordbox library into a set that flows.</small></span><span class="drop-arrow">→</span>
+                  </a>
+                  <a class="drop-card" href="#ai">
+                    <span class="drop-icon"><svg viewBox="0 0 24 24"><path d="M5 6h14v9H9l-4 3V6Z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9 10h.01M12 10h.01M15 10h.01" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
+                    <span class="drop-copy"><strong>Ask the Duck</strong><small>A DJ copilot that understands your current set.</small></span><span class="drop-arrow">→</span>
+                  </a>
+                  <a class="drop-card" href="#moments">
+                    <span class="drop-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+                    <span class="drop-copy"><strong>Library Flow</strong><small>Energy, BPM and key in one calm visual system.</small></span><span class="drop-arrow">→</span>
+                  </a>
+                </div>
+              </div>
+            </li>
+
+            <li class="nav-item">
+              <button class="nav-link" type="button">Explore
+                <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M7.5 2.5 4 6l3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div class="dropdown">
+                <div class="drop-head"><span>The GrooveDuck world</span><span class="drop-badge">Cozy</span></div>
+                <div class="drop-grid">
+                  <a class="drop-card" href="#moments"><span class="drop-icon"><svg viewBox="0 0 24 24"><path d="M5 18c4-8 10-10 14-12M7 7c1 0 2 1 2 2s-1 2-2 2-2-1-2-2 1-2 2-2Z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span><span class="drop-copy"><strong>Mascot moods</strong><small>See GrooveDuck shift with every moment.</small></span><span class="drop-arrow">→</span></a>
+                  <a class="drop-card" href="#builder"><span class="drop-icon"><svg viewBox="0 0 24 24"><path d="M4 12h3l2-6 4 12 2-6h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="drop-copy"><strong>Energy journeys</strong><small>Shape the room without staring at a spreadsheet.</small></span><span class="drop-arrow">→</span></a>
+                  <a class="drop-card" href="#ai"><span class="drop-icon"><svg viewBox="0 0 24 24"><path d="M8 5h8l3 4-3 8H8L5 9l3-4Z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m9 12 2 2 4-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><span class="drop-copy"><strong>Mix guidance</strong><small>Simple suggestions when you want a second opinion.</small></span><span class="drop-arrow">→</span></a>
+                </div>
+              </div>
+            </li>
+
+            <li class="nav-item"><a class="nav-link" href="#builder">Demo</a></li>
+            <li class="nav-item"><a class="nav-link" href="#moments">Moods</a></li>
+            <li class="nav-item"><a class="nav-link" href="#pricing">Pricing</a></li>
+            <li class="nav-item nav-soon" aria-disabled="true">
+              <div class="nav-link cuekoala-link" role="note" aria-label="CueKoala coming soon">
+                <span class="cuekoala-name">CueKoala</span>
+                <span class="cue-tape">COMING SOON</span>
+              </div>
+            </li>
+          </ul>
+
+          <div class="nav-actions">
+            <a href="#pricing" class="nav-cta">See tiers <span aria-hidden="true">↗</span></a>
+          </div>
+        </nav>
+      </div>
+    </div>
+
+    <div class="scroll-progress" aria-hidden="true">
+      <div class="scroll-rail" id="scrollRail">
+        <img class="scroll-duck" id="scrollDuck" src="assets/skateboard-duck-cutout.png" alt="">
+      </div>
+    </div>
+
+    <main id="top">
+      <section class="hero hero-v5">
+        <div class="container hero-grid hero-grid-v5">
+          <div class="hero-copy-wrap reveal visible">
+            <div class="eyebrow"><span class="eyebrow-dot"></span> Built for Rekordbox DJs</div>
+            <h1 class="hero-brand-title">GrooveDuck</h1>
+            <h2 class="hero-tagline">The Ideal Assistent For Every DJ</h2>
+            <div class="hero-slogan" aria-label="Find the groove. Build the set.">
+              <span>Find the <span class="scribble-word">groove.</span></span>
+              <span>Build the set.</span>
+            </div>
+            <p class="hero-copy">Turn your Rekordbox library into a set that actually flows. GrooveDuck brings BPM, key and energy together in one friendly workflow — so you spend less time arranging and more time mixing.</p>
+            <div class="hero-actions">
+              <a class="btn primary" href="#builder">Try the set builder
+                <svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+              <a class="btn" href="#ai">Explore GrooveDuck AI</a>
+            </div>
+            <div class="hero-proof">
+              <span>REKORDBOX XML</span><i></i><span>HARMONIC FLOW</span><i></i><span>ENERGY CURVES</span>
+            </div>
+          </div>
+
+          <div class="mascot-stage reveal visible" id="mascotStage">
+            <div class="stage-label"><span class="stage-status"></span> GrooveDuck is mixing</div>
+            <div class="mascot-frame">
+              <div class="mascot-loop" aria-label="GrooveDuck DJ mascot mixing a set">
+                <img class="draw-frame mixing-frame is-active" data-mix-frame="1" src="assets/mixing-1.png" alt="GrooveDuck mixing frame one">
+                <img class="draw-frame mixing-frame" data-mix-frame="2" src="assets/mixing-2.png" alt="GrooveDuck mixing frame two">
+                <img class="draw-frame mixing-frame" data-mix-frame="3" src="assets/mixing-3.png" alt="GrooveDuck mixing frame three">
+              </div>
+            </div>
+            <div class="float-note note-one">KEY MATCH ✓</div>
+            <div class="float-note note-two">ENERGY +12%</div>
+            <div class="float-note note-three">124 → 128 BPM</div>
+          </div>
+        </div>
+      </section>
+
+      <div class="marquee-wrap" aria-hidden="true">
+        <div class="marquee">
+          <span>REKORDBOX XML <b>✦</b> HARMONIC FLOW <b>✦</b> ENERGY CURVES <b>✦</b> ASK THE DUCK <b>✦</b> SET BUILDER <b>✦</b> REKORDBOX XML <b>✦</b> HARMONIC FLOW <b>✦</b> ENERGY CURVES <b>✦</b> ASK THE DUCK <b>✦</b> SET BUILDER <b>✦</b></span>
+          <span>REKORDBOX XML <b>✦</b> HARMONIC FLOW <b>✦</b> ENERGY CURVES <b>✦</b> ASK THE DUCK <b>✦</b> SET BUILDER <b>✦</b> REKORDBOX XML <b>✦</b> HARMONIC FLOW <b>✦</b> ENERGY CURVES <b>✦</b> ASK THE DUCK <b>✦</b> SET BUILDER <b>✦</b></span>
+        </div>
+      </div>
+
+      <section class="section" id="builder">
+        <div class="container">
+          <div class="section-head builder-section-head reveal">
+            <div class="builder-head-copy"><span class="kicker">01 / The builder</span><h2>DJ software, without the cold dashboard.</h2></div>
+            <div class="builder-head-side">
+              <img class="builder-cozy-art" src="assets/cozy-corner-sleeping.png" alt="GrooveDuck sleeping loudly in a cozy music corner">
+            </div>
+          </div>
+
+          <div class="builder-shell reveal">
+            <div class="window-top">
+              <div class="window-dots"><span class="window-dot"></span><span class="window-dot"></span><span class="window-dot"></span></div>
+              <div class="window-title">GrooveDuck / Set Builder</div>
+              <div class="window-title">STYLE TEST</div>
+            </div>
+            <div class="app-grid">
+              <div class="app-panel">
+                <h3 class="panel-title">Build your set</h3>
+                <p class="panel-sub">This is a visual interaction demo. No real Rekordbox parsing on this test page yet.</p>
+
+                <div class="drop-zone" id="fakeDropZone">
+                  <div>
+                    <span class="upload-icon"><svg viewBox="0 0 24 24"><path d="M12 16V5m0 0L8 9m4-4 4 4M5 17v2h14v-2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <strong>Drag in Rekordbox XML File</strong>
+                    <span>or click to load a demo library</span>
+                  </div>
+                </div>
+
+                <span class="form-label">Choose Amount Of Tracks</span>
+                <div class="gd-dropdown gd-dropdown-wide" data-gd-dropdown data-target="trackAmount" data-min="1" data-max="100" data-step="1" data-value="30" data-suffix="Tracks">
+                  <button class="gd-dropdown-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
+                    <span class="gd-dropdown-value">30</span>
+                    <span class="gd-dropdown-suffix">Tracks</span>
+                    <span class="gd-dropdown-chevron" aria-hidden="true">⌄</span>
+                  </button>
+                  <div class="gd-dropdown-menu" role="listbox" aria-label="Choose amount of tracks"></div>
+                </div>
+                <input id="trackAmount" type="hidden" value="30">
+
+                <span class="form-label">Mixed On</span>
+                <div class="segmented" id="mixChoices">
+                  <button type="button">Key</button>
+                  <button type="button">BPM</button>
+                  <button type="button" class="active">Balanced</button>
+                </div>
+
+                <span class="form-label">BPM Range</span>
+                <div class="bpm-range bpm-range-v17">
+                  <div class="bpm-dropdown-group">
+                    <span class="bpm-mini-label">FROM</span>
+                    <div class="gd-dropdown gd-dropdown-compact" data-gd-dropdown data-target="bpmMin" data-min="40" data-max="250" data-step="1" data-value="122">
+                      <button class="gd-dropdown-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
+                        <span class="gd-dropdown-value">122</span>
+                        <span class="gd-dropdown-chevron" aria-hidden="true">⌄</span>
+                      </button>
+                      <div class="gd-dropdown-menu" role="listbox" aria-label="Minimum BPM"></div>
+                    </div>
+                    <input id="bpmMin" type="hidden" value="122">
+                  </div>
+                  <b class="bpm-arrow">→</b>
+                  <div class="bpm-dropdown-group">
+                    <span class="bpm-mini-label">TO</span>
+                    <div class="gd-dropdown gd-dropdown-compact" data-gd-dropdown data-target="bpmMax" data-min="40" data-max="250" data-step="1" data-value="129">
+                      <button class="gd-dropdown-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
+                        <span class="gd-dropdown-value">129</span>
+                        <span class="gd-dropdown-chevron" aria-hidden="true">⌄</span>
+                      </button>
+                      <div class="gd-dropdown-menu" role="listbox" aria-label="Maximum BPM"></div>
+                    </div>
+                    <input id="bpmMax" type="hidden" value="129">
+                  </div>
+                  <span class="bpm-unit">BPM</span>
+                </div>
+
+                <span class="form-label">Energy Curve</span>
+                <div class="segmented energy-segmented" id="energyChoices">
+                  <button type="button">Constant</button>
+                  <button type="button" class="active">Build Up</button>
+                  <button type="button">Peak</button>
+                  <button type="button">Smooth</button>
+                  <button type="button">Drop</button>
+                  <button type="button">Custom Drawing</button>
+                </div>
+
+                <span class="form-label">Genre</span>
+                <div class="gd-dropdown gd-dropdown-wide" data-gd-dropdown data-target="genreSelect" data-value="House" data-options="House|Tech House|Minimal House|Lofi|Trap|Reggaeton|White Girl Music|HipHop|Techno|Hard Techno|Hardstyle">
+                  <button class="gd-dropdown-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
+                    <span class="gd-dropdown-value">House</span>
+                    <span class="gd-dropdown-chevron" aria-hidden="true">⌄</span>
+                  </button>
+                  <div class="gd-dropdown-menu" role="listbox" aria-label="Choose genre"></div>
+                </div>
+                <input id="genreSelect" type="hidden" value="House">
+
+                <span class="form-label">Notes</span>
+                <textarea class="builder-notes" id="builderNotes" maxlength="1000" placeholder="Add extra instructions for GrooveDuck…" aria-label="Notes for your set"></textarea>
+
+                <button type="button" class="generate" id="generateDemo">Build a demo set →</button>
+              </div>
+
+              <div class="app-panel set-panel">
+                <div class="set-panel-top">
+                  <div><span class="kicker" style="margin-bottom:4px">Your route</span><h3>Saturday warm-up</h3></div>
+                  <div class="set-meta"><span class="meta-chip">30 TRACKS</span><span class="meta-chip">124→128 BPM</span><span class="meta-chip" id="shapeChip">BUILD</span></div>
+                </div>
+                <div class="energy-chart" aria-label="Example energy curve">
+                  <svg viewBox="0 0 700 102" preserveAspectRatio="none">
+                    <line class="gridline" x1="0" y1="26" x2="700" y2="26"/><line class="gridline" x1="0" y1="52" x2="700" y2="52"/><line class="gridline" x1="0" y1="78" x2="700" y2="78"/>
+                    <path class="curve" id="energyPath" d="M12 78 C90 75 105 68 145 67 S225 58 275 56 S365 49 415 43 S500 38 555 27 S630 18 688 16"/>
+                    <circle class="dot" cx="12" cy="78" r="5"/><circle class="dot" cx="145" cy="67" r="5"/><circle class="dot" cx="275" cy="56" r="5"/><circle class="dot" cx="415" cy="43" r="5"/><circle class="dot" cx="555" cy="27" r="5"/><circle class="dot" cx="688" cy="16" r="5"/>
+                  </svg>
+                </div>
+                <div class="track-list" id="trackList">
+                  <div class="track-row"><span class="track-num">01</span><span class="track-main"><strong>Soft Focus</strong><span>Luna Port</span></span><span class="track-bpm">124.0</span><span class="track-key">8A</span><span class="energy-pill"><i style="width:37%"></i></span></div>
+                  <div class="track-row"><span class="track-num">02</span><span class="track-main"><strong>Side Street</strong><span>Miles Nox</span></span><span class="track-bpm">124.6</span><span class="track-key">8A</span><span class="energy-pill"><i style="width:46%"></i></span></div>
+                  <div class="track-row"><span class="track-num">03</span><span class="track-main"><strong>Low Signal</strong><span>June Static</span></span><span class="track-bpm">125.2</span><span class="track-key">9A</span><span class="energy-pill"><i style="width:57%"></i></span></div>
+                  <div class="track-row"><span class="track-num">04</span><span class="track-main"><strong>Warm Circuit</strong><span>North Loop</span></span><span class="track-bpm">126.4</span><span class="track-key">9B</span><span class="energy-pill"><i style="width:70%"></i></span></div>
+                  <div class="track-row"><span class="track-num">05</span><span class="track-main"><strong>Last Train In</strong><span>Mono Club</span></span><span class="track-bpm">127.8</span><span class="track-key">10B</span><span class="energy-pill"><i style="width:86%"></i></span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="ai-section" id="ai">
+        <div class="section ai-moods-section">
+          <div class="container">
+            <div class="ai-moods-head reveal">
+              <div>
+                <span class="kicker">02 / GrooveDuck AI moods</span>
+                <h2>Pick the mood that fits your set.</h2>
+              </div>
+              <p>Use a lighter mood for simple help, switch to Fast when time matters, or let Smart think deeper when your set needs more solving.</p>
+            </div>
+
+            <div class="mood-grid">
+              <button class="mood-card mood-cozy active reveal" type="button" data-mood="Easy" data-reply="Just Chilling, Very Simple GrooveDuck AI.">
+                <div class="mood-copy"><span class="mood-level">EASY MODEL</span><h3>Cozy GrooveDuck</h3><p>Just Chilling, Very Simple GrooveDuck AI.</p></div>
+                <div class="mood-visual"><img src="assets/cozy.png" alt="Cozy GrooveDuck relaxing in a beanbag"></div>
+                <span class="mood-select">Easy &amp; calm <b>→</b></span>
+              </button>
+
+              <button class="mood-card mood-fast reveal" type="button" data-mood="Fast" data-reply="Quick Fixing &amp; Time Saving GrooveDuck AI.">
+                <div class="mood-copy"><span class="mood-level">MEDIUM MODEL</span><h3>Fast GrooveDuck</h3><p>Quick Fixing &amp; Time Saving GrooveDuck AI.</p></div>
+                <div class="mood-visual"><img src="assets/fast.png" alt="Fast GrooveDuck running"></div>
+                <span class="mood-select">Quick fixes <b>→</b></span>
+              </button>
+
+              <button class="mood-card mood-smart reveal" type="button" data-mood="Smart" data-reply="Efficient Thinking &amp; Problem Solving GrooveDuck AI.">
+                <div class="mood-copy"><span class="mood-level">ADVANCED MODEL</span><h3>Smart GrooveDuck</h3><p>Efficient Thinking &amp; Problem Solving GrooveDuck AI.</p></div>
+                <div class="mood-visual"><img src="assets/smart.png" alt="Smart GrooveDuck reading books"></div>
+                <span class="mood-select">Think deeper <b>→</b></span>
+              </button>
+            </div>
+          </div>
+
+          <div class="ai-chat-wrap">
+            <div class="container">
+              <div class="ai-demo-row">
+                <div class="chat-card reveal">
+                  <div class="chat-head">
+                    <div class="chat-id"><span class="chat-duck"></span><span><strong>GrooveDuck AI</strong><span id="chatMoodLabel">Easy mood · demo mode</span></span></div>
+                    <div class="online"><i></i> online</div>
+                  </div>
+                  <div class="chat-body" id="chatBody">
+                    <div class="message bot">Hey — Easy Model is on. Just Chilling, Very Simple GrooveDuck AI.</div>
+                    <div class="message bot">Just Chilling, Very Simple GrooveDuck AI.</div>
+                    <div class="message user">Make the middle of my set warmer.</div>
+                    <div class="message bot">I’d keep the groove and change only one variable at a time: first key, then energy. That usually sounds more intentional.</div>
+                    <div class="typing" id="typing"><i></i><i></i><i></i></div>
+                  </div>
+                  <form class="chat-form" id="chatForm">
+                    <input id="chatInput" autocomplete="off" placeholder="Ask GrooveDuck about your set…" />
+                    <button class="send-btn" type="submit" aria-label="Send message"><svg viewBox="0 0 24 24"><path d="m4 5 16 7-16 7 3-7-3-7Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M7 12h13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+<section class="section moments-section" id="moments">
+        <div class="container">
+          <div class="moments-head reveal">
+            <div><span class="kicker">03 / Mascot moments</span><h2>Same duck. Different mood.</h2></div>
+            <div class="moments-head-right">
+              <p>GrooveDuck stays recognizable, but changes pose with the moment: building, listening, celebrating, thinking, skating or fixing something that went wrong.</p>
+            </div>
+          </div>
+          <div class="moments-carousel" id="momentsCarousel">
+            <button class="moments-arrow moments-prev" id="momentsPrev" type="button" aria-label="Previous GrooveDuck mood">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12l7 7M8 12h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="moments-viewport" id="momentsViewport">
+              <div class="moments-rail" id="momentsRail" aria-label="GrooveDuck mascot moods">
+                <article class="moment-card tone-gray reveal"><img src="assets/computer.png" alt="GrooveDuck working on a laptop"><span>WORK MODE</span><strong>Building with you.</strong></article>
+                <article class="moment-card tone-primary reveal"><img src="assets/standing-music.png" alt="GrooveDuck listening to music"><span>LISTENING</span><strong>Following the groove.</strong></article>
+                <article class="moment-card tone-accent reveal"><img src="assets/vinyl.png" alt="GrooveDuck holding vinyl"><span>LIBRARY</span><strong>Crate energy.</strong></article>
+                <article class="moment-card tone-secondary reveal"><img src="assets/idea.png" alt="GrooveDuck with an idea"><span>IDEA</span><strong>Found a better route.</strong></article>
+                <article class="moment-card tone-gray reveal"><img src="assets/jump-happy.png" alt="GrooveDuck celebrating"><span>SUCCESS</span><strong>Set ready.</strong></article>
+                <article class="moment-card tone-accent reveal"><img src="assets/thinking.png" alt="GrooveDuck thinking"><span>THINKING</span><strong>One second…</strong></article>
+                <article class="moment-card tone-brown reveal"><img src="assets/sad.png" alt="GrooveDuck looking concerned"><span>ERROR</span><strong>Let’s fix that.</strong></article>
+                <article class="moment-card tone-primary reveal"><img src="assets/test-cozy.png" alt="GrooveDuck relaxing"><span>COZY</span><strong>Chill first.</strong></article>
+                <article class="moment-card tone-green reveal"><img src="assets/dj-sunglasses-speakers.png" alt="GrooveDuck DJ with decks and speakers"><span>DJ MODE</span><strong>Turn it up.</strong></article>
+                <article class="moment-card tone-secondary reveal"><img src="assets/skateboard-duck-cutout.png" alt="GrooveDuck skateboarding"><span>SKATE MODE</span><strong>Keep moving.</strong></article>
+                <article class="moment-card tone-accent reveal"><img src="assets/fast.png" alt="Fast GrooveDuck running"><span>FAST MODE</span><strong>Quick fixes.</strong></article>
+                <article class="moment-card tone-green reveal"><img src="assets/smart.png" alt="Smart GrooveDuck reading books"><span>SMART MODE</span><strong>Think deeper.</strong></article>
+                <article class="moment-card tone-brown reveal"><img src="assets/standing.png" alt="GrooveDuck standing"><span>DEFAULT</span><strong>Ready when you are.</strong></article>
+              </div>
+            </div>
+            <button class="moments-arrow moments-next" id="momentsNext" type="button" aria-label="Next GrooveDuck mood">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7m7-7H6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="pricing-section" id="pricing">
+        <div class="container">
+          <div class="pricing-head reveal">
+            <div><span class="kicker">04 / Pricing</span><h2>Choose your plan.</h2></div>
+            <p>Start forever free, step up to Skill for a faster workflow, or choose Creative for the fullest GrooveDuck experience.</p>
+          </div>
+
+          <div class="pricing-grid pricing-grid-v5">
+            <article class="tier-card tier-free reveal">
+              <div class="tier-topline"><span>GROOVEDUCK FREE</span><span class="tier-chip">FREE</span></div>
+              <h3><span>GrooveDuck</span><span>Free</span></h3>
+              <div class="tier-price"><strong>€0,00</strong><span>/ Forever</span></div>
+              <p class="tier-copy">A clean starting point for discovering GrooveDuck and building better sets without paying first.</p>
+              <div class="tier-mascot"><img src="assets/standing-sunglasses.png" alt="GrooveDuck standing with sunglasses"></div>
+              <ul class="tier-features">
+                <li>Build <strong>3 Sets / Week</strong></li>
+                <li>Set Versions Generated: <strong>1 Per Set</strong></li>
+                <li>Max <strong>10 Tracks Per Set</strong></li>
+                <li><strong>3 Adjustments Per Set</strong></li>
+                <li>Save Your Sets: <strong>3</strong></li>
+                <li><strong>10</strong> GrooveDuck AI Chats / Week</li>
+                <li>GrooveDuck AI Models: <strong>Cozy</strong></li>
+                <li>Library Capacity: <strong>100 Tracks</strong></li>
+                <li>Preset Energy Curves: <strong>3</strong></li>
+                <li>Track Replacement: <strong>3 Per Set</strong></li>
+              </ul>
+              <a class="tier-cta" href="#builder"><span>Try Free!</span><span>→</span></a>
+            </article>
+
+            <article class="tier-card tier-medium reveal">
+              <div class="tier-topline">
+                <span>GROOVEDUCK SKILL</span>
+                <span class="tier-badges"><span class="tier-chip">SKILL</span><span class="popular-badge">MOST POPULAR</span></span>
+              </div>
+              <h3><span>GrooveDuck</span><span>Skill</span></h3>
+              <div class="tier-price"><strong>€2,99</strong><span>/ Month</span></div>
+              <p class="tier-copy">For DJs who want a faster workflow, more set control and more room to shape energy, key and flow.</p>
+              <div class="tier-mascot"><img src="assets/dj-sunglasses.png" alt="GrooveDuck with DJ deck and sunglasses"></div>
+              <ul class="tier-features">
+                <li>Build <strong>20 Sets / Week</strong></li>
+                <li>Set Versions Generated: <strong>3 Per Set</strong></li>
+                <li>Max <strong>50 Tracks Per Set</strong></li>
+                <li><strong>20 Adjustments Per Set</strong></li>
+                <li>Save Your Sets: <strong>15</strong></li>
+                <li><strong>100</strong> GrooveDuck AI Chats / Week</li>
+                <li>GrooveDuck AI Models: <strong>Cozy &amp; Fast</strong></li>
+                <li>Library Capacity: <strong>1.000 Tracks</strong></li>
+                <li>Preset Energy Curves: <strong>5</strong></li>
+                <li>Track Replacement: <strong>10 Per Set</strong></li>
+                <li>Custom Instructions: <strong>100 Words</strong></li>
+              </ul>
+              <a class="tier-cta" href="#builder"><span>Unlock Skill!</span><span>→</span></a>
+            </article>
+
+            <article class="tier-card tier-premium reveal">
+              <div class="tier-topline"><span>GROOVEDUCK CREATIVE</span><span class="tier-chip">CREATIVE</span></div>
+              <h3><span>GrooveDuck</span><span>Creative</span></h3>
+              <div class="tier-price"><strong>€7,99</strong><span>/ Month</span></div>
+              <p class="tier-copy">The complete GrooveDuck experience for DJs who want the most control, the richest workflow and every premium tool.</p>
+              <div class="tier-mascot"><img src="assets/dj-sunglasses-speakers.png" alt="GrooveDuck with DJ deck, sunglasses and speakers"></div>
+              <ul class="tier-features">
+                <li>Build <strong>50 Sets / Week</strong></li>
+                <li>Set Versions Generated: <strong>5 Per Set</strong></li>
+                <li>Max <strong>100 Tracks Per Set</strong></li>
+                <li><strong>100 Adjustments Per Set</strong></li>
+                <li>Save Your Sets: <strong>Unlimited</strong></li>
+                <li><strong>1.000</strong> GrooveDuck AI Chats / Week</li>
+                <li>GrooveDuck AI Models: <strong>Cozy, Fast &amp; Smart</strong></li>
+                <li>Library Capacity: <strong>10.000 Tracks</strong></li>
+                <li>Preset Energy Curves: <strong>5 + Fully Custom</strong></li>
+                <li>Track Replacement: <strong>100 Per Set</strong></li>
+                <li>Custom Instructions: <strong>1.000 Words</strong></li>
+              </ul>
+              <a class="tier-cta" href="#builder"><span>Unlock Creative!</span><span>→</span></a>
+            </article>
+          </div>
+</div>
+      </section>
+    </main>
+
+    <footer class="site-footer" id="footer">
+      <div class="container">
+
+        <div class="footer-trust-row" aria-label="GrooveDuck product principles">
+          <span>REKORDBOX-FIRST</span>
+          <i></i>
+          <span>BUILT FOR LAPTOP DJS</span>
+          <i></i>
+          <span>HARMONIC FLOW</span>
+          <i></i>
+          <span>ENERGY-AWARE</span>
+        </div>
+
+        <div class="footer-grid">
+          <div class="footer-brand-block">
+            <div class="footer-brand-row">
+              <span class="footer-logo-wrap" aria-hidden="true"><img src="assets/logo.png" alt=""></span>
+              <span class="footer-brand-title">GrooveDuck</span>
+            </div>
+            <p>The ideal assistant for every DJ — from your first Rekordbox export to a set that actually flows.</p>
+            <div class="footer-brand-pills">
+              <span>Cozy outside</span>
+              <span>Precise inside</span>
+            </div>
+          </div>
+
+          <div class="footer-column">
+            <h3>Product</h3>
+            <nav aria-label="Footer product links">
+              <a href="#builder">Set Builder</a>
+              <a href="#ai">GrooveDuck AI</a>
+              <a href="#moments">Mood Library</a>
+              <a href="#pricing">Pricing</a>
+              <a href="#top">How it works</a>
+            </nav>
+          </div>
+
+          <div class="footer-column">
+            <h3>Learn</h3>
+            <nav aria-label="Footer learn links">
+              <a href="#builder">Rekordbox XML</a>
+              <a href="#builder">Harmonic Flow</a>
+              <a href="#builder">Energy Curves</a>
+              <a href="#builder">BPM &amp; Key Guide</a>
+              <a href="#builder">Set Structure</a>
+            </nav>
+          </div>
+
+          <div class="footer-column">
+            <h3>Tools</h3>
+            <nav aria-label="Footer tool links">
+              <a href="#builder">Build a Set</a>
+              <a href="#ai">Ask the Duck</a>
+              <a href="#builder">Key Match</a>
+              <a href="#builder">Energy Route</a>
+              <a href="#pricing">Compare Plans</a>
+            </nav>
+          </div>
+
+          <div class="footer-column">
+            <h3>GrooveDuck</h3>
+            <nav aria-label="Footer GrooveDuck links">
+              <a href="#moments">Meet the Duck</a>
+              <a href="#moments">Mascot Moods</a>
+              <a href="#ai">AI Moods</a>
+              <a href="#top">About GrooveDuck</a>
+              <a href="mailto:info@grooveduck.app">Contact</a>
+            </nav>
+          </div>
+
+          <div class="footer-column">
+            <h3>Company</h3>
+            <nav aria-label="Footer company links">
+              <a href="mailto:info@grooveduck.app">Support</a>
+              <a href="#footer">Privacy</a>
+              <a href="#footer">Terms</a>
+              <a href="#footer">Cookies</a>
+              <a href="#footer">Status</a>
+            </nav>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <div class="footer-bottom-left">
+            <span>© 2026 GrooveDuck.app</span>
+            <span class="footer-dot"></span>
+            <span>Made for DJs who would rather mix than manage spreadsheets.</span>
+          </div>
+          <div class="footer-bottom-links">
+            <a href="#footer">Privacy</a>
+            <a href="#footer">Terms</a>
+            <a href="#footer">Cookies</a>
+            <a href="mailto:info@grooveduck.app">info@grooveduck.app</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const qs = (s, root=document) => root.querySelector(s);
+    const qsa = (s, root=document) => [...root.querySelectorAll(s)];
+
+    const reducedMotionAnchor = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const getStickyBottom = () => {
+      const road = qs('.scroll-progress');
+      const roadBottom = road ? road.getBoundingClientRect().bottom : 0;
+      return Math.ceil(roadBottom + 14);
+    };
+    const grooveScrollTo = (hash, push = true) => {
+      if (!hash || hash === '#') return false;
+      let target;
+      try { target = qs(hash); } catch (_) { return false; }
+      if (!target) return false;
+      const top = window.scrollY + target.getBoundingClientRect().top - getStickyBottom();
+      window.scrollTo({ top: Math.max(0, top), behavior: reducedMotionAnchor.matches ? 'auto' : 'smooth' });
+      if (push) history.pushState(null, '', hash);
+      return true;
+    };
+    qsa('a[href^="#"]').forEach(link => link.addEventListener('click', (event) => {
+      const hash = link.getAttribute('href');
+      if (!hash || hash === '#') return;
+      let exists = false;
+      try { exists = !!qs(hash); } catch (_) { exists = false; }
+      if (!exists) return;
+      event.preventDefault();
+      grooveScrollTo(hash, true);
+    }));
+    window.addEventListener('hashchange', () => { if (location.hash) grooveScrollTo(location.hash, false); });
+    window.addEventListener('load', () => { if (location.hash) setTimeout(() => grooveScrollTo(location.hash, false), 0); });
+
+
+    // Subtle mascot card tilt.
+    const mascotStage = qs('#mascotStage');
+    if (mascotStage && matchMedia('(pointer:fine)').matches) {
+      mascotStage.addEventListener('mousemove', (event) => {
+        const r = mascotStage.getBoundingClientRect();
+        const x = (event.clientX - r.left) / r.width - .5;
+        const y = (event.clientY - r.top) / r.height - .5;
+        mascotStage.style.transform = `perspective(1000px) rotateY(${x * 3.3}deg) rotateX(${y * -3.3}deg) translateY(-2px)`;
+      });
+      mascotStage.addEventListener('mouseleave', () => mascotStage.style.transform = '');
+    }
+
+    // Reveal on scroll.
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: .12 });
+    qsa('.reveal:not(.visible)').forEach(el => observer.observe(el));
+
+    // Segmented controls.
+    const pathMap = {
+      Constant: 'M12 52 C130 52 225 52 340 52 S560 52 688 52',
+      'Build Up': 'M12 78 C90 75 105 68 145 67 S225 58 275 56 S365 49 415 43 S500 38 555 27 S630 18 688 16',
+      Peak: 'M12 78 C90 72 150 57 225 45 S340 15 420 17 S530 31 590 50 S650 63 688 66',
+      Smooth: 'M12 69 C110 70 130 59 205 57 S330 51 430 49 S565 44 688 39',
+      Drop: 'M12 26 C115 27 190 31 270 37 S405 44 485 50 S585 65 688 78',
+      'Custom Drawing': 'M12 71 C95 38 150 80 235 44 S350 21 425 58 S540 77 610 34 S655 30 688 18'
+    };
+    const energyPath = qs('#energyPath');
+    const energyDots = qsa('.energy-chart .dot');
+    const energyDotFractions = [0, .2, .4, .6, .8, 1];
+
+    const getEnergyDotTargets = () => {
+      if (!energyPath || !energyDots.length) return [];
+      const total = energyPath.getTotalLength();
+      return energyDotFractions.slice(0, energyDots.length).map(fraction => {
+        const point = energyPath.getPointAtLength(total * fraction);
+        return { x: point.x, y: point.y };
+      });
+    };
+
+    const syncEnergyDots = (animate = true) => {
+      if (!energyPath || !energyDots.length) return;
+      const targets = getEnergyDotTargets();
+      const starts = energyDots.map(dot => ({
+        x: Number(dot.getAttribute('cx')),
+        y: Number(dot.getAttribute('cy'))
+      }));
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const duration = (!animate || reduce) ? 0 : 520;
+      if (!duration) {
+        energyDots.forEach((dot, i) => {
+          if (!targets[i]) return;
+          dot.setAttribute('cx', targets[i].x.toFixed(2));
+          dot.setAttribute('cy', targets[i].y.toFixed(2));
+        });
+        return;
+      }
+      const started = performance.now();
+      const ease = t => 1 - Math.pow(1 - t, 3);
+      const frame = now => {
+        const t = Math.min(1, (now - started) / duration);
+        const e = ease(t);
+        energyDots.forEach((dot, i) => {
+          if (!targets[i]) return;
+          const x = starts[i].x + (targets[i].x - starts[i].x) * e;
+          const y = starts[i].y + (targets[i].y - starts[i].y) * e;
+          dot.setAttribute('cx', x.toFixed(2));
+          dot.setAttribute('cy', y.toFixed(2));
+        });
+        if (t < 1) requestAnimationFrame(frame);
+      };
+      requestAnimationFrame(frame);
+    };
+
+    qsa('#energyChoices button').forEach(btn => btn.addEventListener('click', () => {
+      qsa('#energyChoices button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const curveName = btn.textContent.trim();
+      qs('#shapeChip').textContent = curveName.toUpperCase();
+      energyPath?.setAttribute('d', pathMap[curveName] || pathMap['Build Up']);
+      syncEnergyDots(true);
+    }));
+    // Snap initial markers to the current path so every breakpoint starts aligned.
+    syncEnergyDots(false);
+    qsa('#mixChoices button').forEach(btn => btn.addEventListener('click', () => {
+      qsa('#mixChoices button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }));
+
+    // GrooveDuck custom scroll dropdowns (tracks, BPM and genre).
+    const gdDropdowns = qsa('[data-gd-dropdown]');
+    const closeGdDropdowns = (except = null) => {
+      gdDropdowns.forEach(drop => {
+        if (drop === except) return;
+        drop.classList.remove('is-open');
+        drop.querySelector('.gd-dropdown-trigger')?.setAttribute('aria-expanded', 'false');
+      });
+    };
+    const makeDropdownOptions = (drop) => {
+      const menu = drop.querySelector('.gd-dropdown-menu');
+      if (!menu || menu.children.length) return;
+      let values = [];
+      if (drop.dataset.options) {
+        values = drop.dataset.options.split('|');
+      } else {
+        const min = Number(drop.dataset.min || 0);
+        const max = Number(drop.dataset.max || 100);
+        const step = Math.max(1, Number(drop.dataset.step || 1));
+        for (let value = min; value <= max; value += step) values.push(String(value));
+      }
+      values.forEach(value => {
+        const option = document.createElement('button');
+        option.type = 'button';
+        option.className = 'gd-dropdown-option';
+        option.setAttribute('role', 'option');
+        option.dataset.value = value;
+        option.textContent = value;
+        option.addEventListener('click', () => {
+          const target = qs(`#${drop.dataset.target}`);
+          const display = drop.querySelector('.gd-dropdown-value');
+          if (display) display.textContent = value;
+          drop.dataset.value = value;
+          if (target) {
+            target.value = value;
+            target.dispatchEvent(new Event('input', { bubbles: true }));
+            target.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+          qsa('.gd-dropdown-option', menu).forEach(btn => {
+            const selected = btn.dataset.value === value;
+            btn.classList.toggle('is-selected', selected);
+            btn.setAttribute('aria-selected', selected ? 'true' : 'false');
+          });
+          drop.classList.remove('is-open');
+          drop.querySelector('.gd-dropdown-trigger')?.setAttribute('aria-expanded', 'false');
+        });
+        menu.appendChild(option);
+      });
+    };
+    gdDropdowns.forEach(drop => {
+      makeDropdownOptions(drop);
+      const trigger = drop.querySelector('.gd-dropdown-trigger');
+      const initialValue = String(drop.dataset.value || '');
+      qsa('.gd-dropdown-option', drop).forEach(btn => {
+        const selected = btn.dataset.value === initialValue;
+        btn.classList.toggle('is-selected', selected);
+        btn.setAttribute('aria-selected', selected ? 'true' : 'false');
+      });
+      trigger?.addEventListener('click', (event) => {
+        event.stopPropagation();
+        const willOpen = !drop.classList.contains('is-open');
+        closeGdDropdowns(drop);
+        drop.classList.toggle('is-open', willOpen);
+        trigger.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+        if (willOpen) {
+          requestAnimationFrame(() => {
+            drop.querySelector('.gd-dropdown-option.is-selected')?.scrollIntoView({ block: 'nearest' });
+          });
+        }
+      });
+    });
+    document.addEventListener('click', () => closeGdDropdowns());
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeGdDropdowns();
+    });
+
+    // Keep the visual result panel in sync with the new Set Builder controls.
+    const trackAmount = qs('#trackAmount');
+    const bpmMin = qs('#bpmMin');
+    const bpmMax = qs('#bpmMax');
+    const metaChips = qsa('.set-meta .meta-chip');
+    const syncBuilderMeta = () => {
+      if (metaChips[0] && trackAmount) metaChips[0].textContent = `${trackAmount.value || 30} TRACKS`;
+      if (metaChips[1] && bpmMin && bpmMax) metaChips[1].textContent = `${bpmMin.value || 122}→${bpmMax.value || 129} BPM`;
+    };
+    [trackAmount, bpmMin, bpmMax].forEach(input => input?.addEventListener('input', syncBuilderMeta));
+    syncBuilderMeta();
+
+    // Fake upload feedback.
+    const fakeDrop = qs('#fakeDropZone');
+    fakeDrop.addEventListener('click', () => {
+      const old = fakeDrop.innerHTML;
+      fakeDrop.style.background = 'var(--primary)';
+      fakeDrop.innerHTML = '<div><span class="upload-icon" style="background:var(--accent)">✓</span><strong>Library ready</strong><span>2,481 tracks found · demo only</span></div>';
+      setTimeout(() => { fakeDrop.style.background = ''; }, 850);
+      setTimeout(() => { fakeDrop.dataset.loaded = 'true'; }, 50);
+    });
+
+    // Demo set rebuild animation.
+    const demos = [
+      [
+        ['01','Window Seat','Soft Current','124.0','7A','34%'],
+        ['02','Orange Lamp','Luna Port','124.8','8A','43%'],
+        ['03','Corner Store','June Static','125.4','8A','57%'],
+        ['04','Sidewalk Heat','North Loop','126.7','9A','72%'],
+        ['05','Upstairs Late','Mono Club','128.0','9B','89%']
+      ],
+      [
+        ['01','Soft Focus','Luna Port','124.0','8A','37%'],
+        ['02','Side Street','Miles Nox','124.6','8A','46%'],
+        ['03','Low Signal','June Static','125.2','9A','57%'],
+        ['04','Warm Circuit','North Loop','126.4','9B','70%'],
+        ['05','Last Train In','Mono Club','127.8','10B','86%']
+      ]
+    ];
+    let demoIndex = 0;
+    qs('#generateDemo').addEventListener('click', () => {
+      const button = qs('#generateDemo');
+      button.classList.add('loading');
+      button.textContent = 'GrooveDuck is thinking…';
+      qsa('.track-row').forEach((row,i) => setTimeout(() => row.classList.add('rebuild'), i*45));
+      setTimeout(() => {
+        demoIndex = (demoIndex + 1) % demos.length;
+        qs('#trackList').innerHTML = demos[demoIndex].map(t => `
+          <div class="track-row rebuild"><span class="track-num">${t[0]}</span><span class="track-main"><strong>${t[1]}</strong><span>${t[2]}</span></span><span class="track-bpm">${t[3]}</span><span class="track-key">${t[4]}</span><span class="energy-pill"><i style="width:${t[5]}"></i></span></div>`).join('');
+        qsa('.track-row').forEach((row,i) => setTimeout(() => row.classList.remove('rebuild'), i*55));
+        button.classList.remove('loading');
+        button.textContent = 'Build another demo →';
+      }, 640);
+    });
+
+    // Chat demo.
+    const chatBody = qs('#chatBody');
+    const chatInput = qs('#chatInput');
+    const typing = qs('#typing');
+    const replies = [
+      'I’d keep the BPM where it is and soften the energy step. That gives you more room before the peak.',
+      'Track 12 wants something close in key first. I’d search 9A / 9B around the same BPM, then lift energy one step later.',
+      'Those two work because the key relationship is friendly and the BPM change is tiny. You can make that transition long and relaxed.',
+      'I’d keep the groove and change only one variable at a time: first key, then energy. That usually sounds more intentional.'
+    ];
+    function sendDemo(text) {
+      const clean = text.trim();
+      if (!clean) return;
+      const user = document.createElement('div');
+      user.className = 'message user';
+      user.textContent = clean;
+      chatBody.insertBefore(user, typing);
+      typing.classList.add('show');
+      chatBody.scrollTop = chatBody.scrollHeight;
+      setTimeout(() => {
+        typing.classList.remove('show');
+        const bot = document.createElement('div');
+        bot.className = 'message bot';
+        bot.textContent = replies[Math.floor(Math.random()*replies.length)];
+        chatBody.insertBefore(bot, typing);
+        chatBody.scrollTop = chatBody.scrollHeight;
+      }, 900);
+    }
+    qs('#chatForm').addEventListener('submit', (e) => { e.preventDefault(); sendDemo(chatInput.value); chatInput.value=''; });
+    qsa('.ai-bubble').forEach(b => b.addEventListener('click', () => sendDemo(b.dataset.prompt || b.textContent)));
+
+
+    // GrooveDuck v16: hand-drawn mixing loop in the requested irregular sequence.
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const mixingFrames = qsa('.mascot-loop .mixing-frame');
+    const mixingSequence = [1, 2, 2, 3, 1, 3, 2];
+    // Slightly irregular frame holds keep the motion organic without becoming frantic.
+    const mixingTimings = [245, 185, 330, 225, 290, 205, 365];
+    if (mixingFrames.length) {
+      let mixingStep = 0;
+      const showMixingFrame = (number) => {
+        mixingFrames.forEach(frame => frame.classList.toggle('is-active', Number(frame.dataset.mixFrame) === number));
+      };
+      showMixingFrame(1);
+      if (!reducedMotion) {
+        const advanceMixingFrame = () => {
+          const number = mixingSequence[mixingStep % mixingSequence.length];
+          showMixingFrame(number);
+          const delay = mixingTimings[mixingStep % mixingTimings.length];
+          mixingStep += 1;
+          window.setTimeout(advanceMixingFrame, delay);
+        };
+        advanceMixingFrame();
+      }
+    }
+
+    // GrooveDuck AI mood selector.
+    const moodContent = {
+      Easy: { title: 'Easy GrooveDuck', copy: 'Just Chilling, Very Simple GrooveDuck AI.' },
+      Fast: { title: 'Fast GrooveDuck', copy: 'Quick Fixing & Time Saving GrooveDuck AI.' },
+      Smart: { title: 'Smart GrooveDuck', copy: 'Efficient Thinking & Problem Solving GrooveDuck AI.' }
+    };
+    qsa('.mood-card').forEach(card => card.addEventListener('click', () => {
+      qsa('.mood-card').forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+      const mood = card.dataset.mood || 'Easy';
+      const data = moodContent[mood];
+      const moodTitle = qs('#activeMoodTitle');
+      const moodCopy = qs('#activeMoodCopy');
+      if (moodTitle) moodTitle.textContent = data.title;
+      if (moodCopy) moodCopy.textContent = data.copy;
+      qs('#chatMoodLabel').textContent = `${mood} mood · demo mode`;
+      const bot = document.createElement('div');
+      bot.className = 'message bot';
+      bot.textContent = card.dataset.reply || data.copy;
+      chatBody.insertBefore(bot, typing);
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }));
+    // Mood grid is static in v6, so no carousel controls are needed.
+
+
+
+    // Mascot moods carousel — continuous motion opposite the pink marquee (cards move right).
+    const momentsCarousel = qs('#momentsCarousel');
+    const momentsViewport = qs('#momentsViewport');
+    const momentsRail = qs('#momentsRail');
+    const momentsPrev = qs('#momentsPrev');
+    const momentsNext = qs('#momentsNext');
+
+    if (momentsCarousel && momentsViewport && momentsRail) {
+      const originalCards = [...momentsRail.children];
+      const reducedCarouselMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Three identical sets give us space to travel in both directions without a visible reset.
+      const before = originalCards.map(card => {
+        const clone = card.cloneNode(true);
+        clone.classList.remove('reveal');
+        clone.classList.add('visible');
+        clone.setAttribute('aria-hidden', 'true');
+        return clone;
+      });
+      const after = originalCards.map(card => {
+        const clone = card.cloneNode(true);
+        clone.classList.remove('reveal');
+        clone.classList.add('visible');
+        clone.setAttribute('aria-hidden', 'true');
+        return clone;
+      });
+      before.reverse().forEach(clone => momentsRail.insertBefore(clone, momentsRail.firstChild));
+      after.forEach(clone => momentsRail.appendChild(clone));
+
+      let loopWidth = 0;
+      let position = 0;
+      let hoverPaused = false;
+      let focusPaused = false;
+      let resumeAt = 0;
+      let tween = null;
+      let last = performance.now();
+      const autoSpeed = 26; // px/s, deliberately visible but still cozy.
+
+      const gapSize = () => parseFloat(getComputedStyle(momentsRail).gap || '18') || 18;
+      const cardStep = () => {
+        const card = originalCards[0];
+        return card ? card.getBoundingClientRect().width + gapSize() : 280;
+      };
+      const normalize = () => {
+        if (!loopWidth) return;
+        while (position >= 0) position -= loopWidth;
+        while (position < -2 * loopWidth) position += loopWidth;
+      };
+      const paint = () => {
+        momentsRail.style.transform = `translate3d(${position}px,0,0)`;
+      };
+      const measure = () => {
+        const step = cardStep();
+        loopWidth = step * originalCards.length;
+        if (!Number.isFinite(loopWidth) || loopWidth <= 0) return;
+        position = -loopWidth;
+        tween = null;
+        paint();
+      };
+      const easeInOut = (t) => t < .5 ? 2*t*t : 1 - Math.pow(-2*t + 2, 2) / 2;
+      const nudge = (direction) => {
+        if (!loopWidth) measure();
+        const now = performance.now();
+        const delta = direction * cardStep();
+        tween = { from: position, to: position + delta, start: now, duration: reducedCarouselMotion ? 1 : 420 };
+        resumeAt = now + 1800;
+      };
+
+      momentsPrev?.addEventListener('click', () => nudge(1));
+      momentsNext?.addEventListener('click', () => nudge(-1));
+      momentsCarousel.addEventListener('mouseenter', () => { hoverPaused = true; });
+      momentsCarousel.addEventListener('mouseleave', () => { hoverPaused = false; last = performance.now(); });
+      momentsCarousel.addEventListener('focusin', () => { focusPaused = true; });
+      momentsCarousel.addEventListener('focusout', () => { focusPaused = false; last = performance.now(); });
+      window.addEventListener('resize', () => requestAnimationFrame(measure));
+
+      const tick = (now) => {
+        const deltaMs = Math.min(48, Math.max(0, now - last));
+        last = now;
+
+        if (tween) {
+          const t = Math.min(1, (now - tween.start) / tween.duration);
+          position = tween.from + (tween.to - tween.from) * easeInOut(t);
+          if (t >= 1) {
+            position = tween.to;
+            tween = null;
+            normalize();
+          }
+        } else if (!reducedCarouselMotion && !hoverPaused && !focusPaused && now >= resumeAt && loopWidth > 0) {
+          // Positive movement means the cards travel to the RIGHT, opposite the top marquee.
+          position += autoSpeed * (deltaMs / 1000);
+          normalize();
+        }
+        paint();
+        requestAnimationFrame(tick);
+      };
+
+      requestAnimationFrame(() => {
+        measure();
+        last = performance.now();
+        requestAnimationFrame(tick);
+      });
+    }
+
+    // Scroll indicator duck.
+    const scrollRail = qs('#scrollRail');
+    const scrollDuck = qs('#scrollDuck');
+    function updateScrollDuck() {
+      if (!scrollRail || !scrollDuck) return;
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
+      const maxX = Math.max(0, scrollRail.clientWidth - scrollDuck.clientWidth);
+      scrollDuck.style.transform = `translateX(${maxX * progress}px)`;
+    }
+    updateScrollDuck();
+    if (scrollDuck) scrollDuck.addEventListener('load', updateScrollDuck);
+    window.addEventListener('scroll', () => requestAnimationFrame(updateScrollDuck), { passive: true });
+    window.addEventListener('resize', updateScrollDuck);
+
+  </script>
+</body>
+</html>
