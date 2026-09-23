@@ -8,7 +8,7 @@
   <meta name="description" content="GrooveDuck.app — the ideal DJ assistant for building smoother, smarter sets from your Rekordbox library." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Intel+One+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Alice&family=Bree+Serif&display=swap" rel="stylesheet">
   <style>
     :root {
       --text: #000000;
@@ -2803,7 +2803,7 @@
 
 
 
-    /* GrooveDuck 1.9 — calmer viewport, balanced canvas and responsive energy dots. */
+    /* GrooveDuck 1.10 — calmer viewport, balanced canvas and responsive energy dots. */
     @media (min-width: 901px) {
       /* Center the page in the usable canvas: equal breathing room after the sidebar and at the right edge. */
       main .container,
@@ -2897,7 +2897,996 @@
       .builder-head-side { min-height: 0 !important; }
       .builder-cozy-art { margin: 8px auto 0 !important; }
     }
-</style>
+
+    /* GrooveDuck 1.10 — calmer white canvas, new typography, refined pricing and simplified rail. */
+    :root {
+      --page-white: #FFFFFF;
+      --calm-shadow: 0 10px 28px rgba(0,0,0,.055);
+    }
+
+    /* Typography: Alice for body/UI, Bogart first for display text. The fallbacks keep the live site polished
+       until a licensed Bogart webfont is hosted. */
+    body,
+    body *,
+    button,
+    input,
+    textarea,
+    select {
+      font-family: 'Alice', Georgia, serif !important;
+    }
+    h1,h2,h3,h4,h5,
+    .brand-name,
+    .hero-slogan,
+    .panel-title,
+    .moment-card strong,
+    .footer-brand-title,
+    .chat-id strong,
+    .drop-copy strong {
+      font-family: 'Bogart', 'Cooper Black', 'Bree Serif', Georgia, serif !important;
+      font-weight: 700 !important;
+      letter-spacing: -0.018em !important;
+      overflow-wrap: normal !important;
+      word-break: normal !important;
+    }
+    .brand-name { font-weight: 700 !important; letter-spacing: -.02em !important; }
+
+    /* Keep headings bold and contained. */
+    .hero-brand-title { font-size: clamp(70px, 6.8vw, 112px) !important; line-height: .9 !important; }
+    .hero-tagline { font-size: clamp(25px, 2.25vw, 36px) !important; line-height: 1.08 !important; }
+    .hero-slogan { font-size: clamp(30px, 2.9vw, 46px) !important; line-height: 1.04 !important; }
+    .section-head h2,
+    .ai-moods-head h2,
+    .moments-head h2,
+    .pricing-head h2 {
+      font-size: clamp(42px, 4.65vw, 68px) !important;
+      line-height: 1.02 !important;
+      max-width: 900px;
+    }
+    .mood-copy h3 {
+      font-size: clamp(28px, 2.35vw, 38px) !important;
+      line-height: 1.02 !important;
+      white-space: normal !important;
+      max-width: 100%;
+    }
+    .tier-card h3 {
+      font-size: clamp(31px, 2.3vw, 39px) !important;
+      line-height: .98 !important;
+      min-height: 74px !important;
+    }
+
+    /* White becomes the page canvas. Yellow stays an accent and the footer remains intentionally yellow. */
+    main,
+    .hero,
+    #builder,
+    .ai-section,
+    .ai-chat-wrap,
+    .moments-section,
+    .pricing-section {
+      background: var(--page-white) !important;
+    }
+    #builder { border-top-color: rgba(0,0,0,.12) !important; border-bottom-color: rgba(0,0,0,.12) !important; }
+    .site-footer { background: var(--primary) !important; }
+
+    /* A quieter surface: less texture, less exaggerated hover movement, softer depth. */
+    body::before { opacity: .07 !important; }
+    .builder-shell,
+    .mascot-stage,
+    .chat-card,
+    .mood-card,
+    .tier-card { box-shadow: var(--calm-shadow) !important; }
+    .moment-card:hover { transform: translateY(-4px) !important; box-shadow: 5px 6px 0 rgba(0,0,0,.88) !important; }
+    .mascot-stage:hover .mascot-loop { transform: scale(1.018) !important; }
+    .section-head,
+    .ai-moods-head,
+    .moments-head,
+    .pricing-head { margin-bottom: 30px !important; }
+    .section { padding-bottom: 78px; }
+    .pricing-section { padding-bottom: 92px !important; }
+
+    /* Simplified app rail. Each item is one clear destination and every button has the same yellow glow. */
+    .nav-menu { gap: 8px !important; }
+    .nav-link {
+      min-height: 47px !important;
+      padding: 0 12px !important;
+      background: #fff !important;
+      border: 1.4px solid var(--text) !important;
+      border-radius: 14px !important;
+      box-shadow: 4px 4px 0 rgba(250,219,52,.82) !important;
+      overflow: hidden !important;
+      font-size: 10.5px !important;
+      font-weight: 700 !important;
+      text-decoration: none !important;
+    }
+    .nav-link:hover {
+      transform: translate(2px,-1px) !important;
+      box-shadow: 5px 5px 0 var(--primary) !important;
+      background: #fff !important;
+    }
+    .nav-arrow {
+      margin-left: auto;
+      font-family: 'Alice', Georgia, serif !important;
+      font-size: 17px;
+      line-height: 1;
+      transition: transform .22s var(--ease-smooth);
+    }
+    .nav-link:hover .nav-arrow { transform: translateX(3px); }
+
+    /* See tiers is now white with the same GrooveDuck yellow lift. */
+    .nav-cta {
+      background: #fff !important;
+      color: var(--text) !important;
+      border: 1.4px solid var(--text) !important;
+      box-shadow: 4px 5px 0 var(--primary) !important;
+    }
+    .nav-cta:hover { box-shadow: 6px 7px 0 var(--primary) !important; }
+
+    /* CueKoala is visibly sealed by two crossing hazard tapes. */
+    .cuekoala-link { overflow: hidden !important; min-height: 52px !important; }
+    .cuekoala-name { opacity: .62; position: relative; z-index: 1; }
+    .cue-tape {
+      position: absolute !important;
+      left: 50% !important;
+      right: auto !important;
+      top: 50% !important;
+      width: 122% !important;
+      height: 21px !important;
+      display: grid !important;
+      place-items: center !important;
+      border: 1px solid var(--text) !important;
+      background: repeating-linear-gradient(135deg,#111 0 10px,#111 10px 12px,var(--primary) 12px 22px,var(--primary) 22px 24px) !important;
+      color: #fff !important;
+      text-shadow: 0 1px 1px #000 !important;
+      font-family: 'Alice', Georgia, serif !important;
+      font-size: 6.2px !important;
+      font-weight: 700 !important;
+      letter-spacing: .11em !important;
+      z-index: 4 !important;
+      box-shadow: 2px 2px 0 rgba(0,0,0,.15) !important;
+      pointer-events: none;
+    }
+    .cue-tape-a { transform: translate(-50%,-50%) rotate(13deg) !important; }
+    .cue-tape-b { transform: translate(-50%,-50%) rotate(-13deg) !important; }
+
+    /* Quiet Cozy Corner artwork on the new white builder canvas. */
+    .builder-head-side { min-height: 285px !important; }
+    .builder-cozy-art {
+      width: min(440px, 100%) !important;
+      max-height: 300px !important;
+      object-fit: contain !important;
+      object-position: center !important;
+      margin: 10px 0 0 !important;
+      filter: none !important;
+      transform: none !important;
+    }
+
+    /* Pricing art: decks and speakers are fully visible with safe space before feature copy. */
+    .tier-mascot {
+      height: 310px !important;
+      min-height: 310px !important;
+      flex-basis: 310px !important;
+      padding: 12px 6px 20px !important;
+      margin: 2px 0 18px !important;
+      overflow: hidden !important;
+    }
+    .tier-mascot img {
+      width: auto !important;
+      height: auto !important;
+      max-width: 94% !important;
+      max-height: 100% !important;
+      object-fit: contain !important;
+      object-position: center center !important;
+    }
+    .tier-free .tier-mascot img { max-width: 72% !important; max-height: 90% !important; }
+    .tier-medium .tier-mascot img { max-width: 92% !important; max-height: 96% !important; }
+    .tier-premium .tier-mascot img { max-width: 96% !important; max-height: 96% !important; }
+    .tier-features { margin-top: 0 !important; }
+
+    /* Keep the overall desktop canvas calm and readable. */
+    @media (min-width: 901px) {
+      .hero-v5 { min-height: 620px !important; padding-top: 88px !important; padding-bottom: 28px !important; }
+      .hero-grid-v5 { gap: clamp(38px, 4vw, 68px) !important; }
+      .mascot-stage { min-height: 460px !important; }
+      .mascot-frame { inset: 64px 30px 24px !important; }
+      #builder.section { padding-top: 58px !important; }
+      .ai-section .section.ai-moods-section,
+      .moments-section.section,
+      .pricing-section { padding-top: 52px !important; }
+    }
+
+    @media (max-width: 1180px) and (min-width: 981px) {
+      .tier-mascot { height: 286px !important; min-height: 286px !important; flex-basis: 286px !important; }
+      .tier-card h3 { font-size: 31px !important; }
+      .mood-copy h3 { font-size: 30px !important; }
+    }
+    @media (max-width: 980px) {
+      .tier-mascot { height: 290px !important; min-height: 290px !important; flex-basis: 290px !important; }
+      .builder-cozy-art { margin-inline: auto !important; }
+    }
+    @media (max-width: 640px) {
+      .hero-brand-title { font-size: clamp(54px, 18vw, 78px) !important; }
+      .hero-tagline { font-size: 27px !important; }
+      .hero-slogan { font-size: 34px !important; }
+      .tier-mascot { height: 250px !important; min-height: 250px !important; flex-basis: 250px !important; }
+      .cue-tape { width: 135% !important; font-size: 5.5px !important; }
+    }
+
+
+
+    /* GrooveDuck 1.11 — cozy homepage, full-bleed moods and a livelier fixed-height AI chat. */
+
+    /* Homepage: the new 16:9 Cozy Fall Loghouse artwork becomes the page itself. */
+    .hero-homepage {
+      position: relative !important;
+      min-height: 620px !important;
+      height: calc(100svh - 42px) !important;
+      max-height: 820px !important;
+      padding: 96px 0 34px !important;
+      overflow: hidden !important;
+      display: flex;
+      align-items: center;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.96) 0%, rgba(255,255,255,.90) 25%, rgba(255,255,255,.66) 43%, rgba(255,255,255,.10) 68%, rgba(255,255,255,0) 100%),
+        url('assets/home-cozy-fall.png') center center / cover no-repeat !important;
+      border-bottom: 0 !important;
+    }
+    .hero-homepage::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(0,0,0,.03));
+      z-index: 0;
+    }
+    .hero-home-inner {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      min-height: 100%;
+    }
+    .hero-home-copy {
+      width: min(660px, 52%);
+      padding: 6px 0 0;
+    }
+    .hero-homepage .hero-brand-title {
+      margin: 0 !important;
+      font-size: clamp(76px, 8vw, 132px) !important;
+      line-height: .88 !important;
+      text-wrap: nowrap;
+    }
+    .hero-homepage .hero-copy {
+      max-width: 610px !important;
+      margin-top: 26px !important;
+      font-size: clamp(15px, 1.18vw, 19px) !important;
+      line-height: 1.65 !important;
+      color: #111 !important;
+    }
+    .hero-homepage .hero-actions { margin-top: 28px !important; }
+    .hero-homepage .hero-proof { margin-top: 20px !important; }
+    .hero-homepage .btn { backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+
+    /* Hover language restored consistently on AI mood and pricing cards. */
+    .mood-card,
+    .tier-card {
+      transition: transform .34s var(--ease-smooth), box-shadow .34s var(--ease-smooth), filter .34s var(--ease-smooth) !important;
+      will-change: transform, box-shadow;
+    }
+    .mood-card:hover,
+    .tier-card:hover {
+      transform: translateY(-7px) !important;
+      box-shadow: 8px 10px 0 rgba(0,0,0,.90), 0 18px 38px rgba(0,0,0,.08) !important;
+      z-index: 6;
+    }
+    .tier-card:hover .tier-mascot img { transform: scale(1.025) rotate(-.2deg); }
+    .tier-mascot img { transition: transform .34s var(--ease-smooth); }
+
+    /* AI mood palette: Cozy gray, Fast pink, Smart yellow. */
+    .mood-cozy { background: var(--gray) !important; }
+    .mood-fast { background: var(--accent) !important; }
+    .mood-smart { background: var(--primary) !important; }
+
+    /* Stronger CTA copy on mood and pricing cards. */
+    .mood-select,
+    .tier-cta {
+      font-size: 12px !important;
+      font-weight: 800 !important;
+      letter-spacing: .01em !important;
+    }
+    .mood-select { min-height: 58px; padding: 15px 18px !important; }
+    .tier-cta { min-height: 62px !important; padding-inline: 18px !important; }
+    .mood-select b,
+    .tier-cta > span:last-child { font-size: 20px !important; }
+
+    /* Builder intro: compact spacing, bigger transparent Cozy Corner art. */
+    #builder.section { padding-top: 40px !important; }
+    .builder-section-head {
+      gap: clamp(18px, 2.4vw, 36px) !important;
+      margin-bottom: 16px !important;
+      align-items: center !important;
+    }
+    .builder-head-copy {
+      flex: 1 1 54% !important;
+      padding-top: 0 !important;
+      align-self: center !important;
+    }
+    .builder-head-side {
+      flex: 0 1 520px !important;
+      min-width: 360px !important;
+      min-height: 220px !important;
+      justify-content: center !important;
+      align-items: flex-end !important;
+    }
+    .builder-cozy-art {
+      width: min(540px, 100%) !important;
+      max-height: 330px !important;
+      margin: 0 -4px 0 0 !important;
+      object-fit: contain !important;
+      object-position: right center !important;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.08)) !important;
+    }
+    .builder-shell { margin-top: 0 !important; }
+
+    /* Mascot Moments: cards run edge-to-edge behind the floating sidebar. */
+    .moments-section { overflow: hidden !important; }
+    .moments-carousel-full {
+      position: relative;
+      width: 100vw !important;
+      margin-left: calc(0px - var(--sidebar-w) - 28px) !important;
+      padding: 16px 0 20px !important;
+      display: block !important;
+      overflow: visible !important;
+    }
+    .moments-carousel-full .moments-viewport {
+      width: 100vw !important;
+      overflow: hidden !important;
+      margin: -16px 0 -20px !important;
+      padding: 16px 0 20px !important;
+      border-radius: 0 !important;
+    }
+    .moments-carousel-full .moments-rail {
+      padding-inline: 22px !important;
+    }
+    .moments-carousel-full .moments-arrow {
+      position: absolute !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      z-index: 74 !important;
+    }
+    .moments-carousel-full .moments-prev { left: calc(var(--sidebar-w) + 38px) !important; }
+    .moments-carousel-full .moments-next { right: 24px !important; }
+    .moments-carousel-full .moments-arrow:hover { transform: translateY(calc(-50% - 2px)) !important; }
+    .moments-carousel-full .moments-arrow:active { transform: translateY(calc(-50% + 1px)) !important; }
+
+    /* GrooveDuck AI: fixed chat viewport, real logo and clearer conversational hierarchy. */
+    .chat-card {
+      box-shadow: 7px 8px 0 var(--accent), 0 16px 34px rgba(0,0,0,.07) !important;
+    }
+    .chat-head {
+      background: linear-gradient(90deg, rgba(253,180,168,.34), rgba(250,219,52,.18)) !important;
+      min-height: 72px !important;
+    }
+    .chat-duck {
+      width: 46px !important;
+      height: 46px !important;
+      display: grid !important;
+      place-items: center !important;
+      overflow: hidden !important;
+      background: #fff !important;
+      border-radius: 15px !important;
+      box-shadow: 2px 3px 0 var(--primary);
+    }
+    .chat-duck img { width: 100%; height: 100%; object-fit: contain; padding: 2px; }
+    .chat-duck::before,
+    .chat-duck::after { display: none !important; }
+    .chat-id strong { font-size: 21px !important; }
+    .chat-id > span > span { font-size: 10px !important; }
+    .online { padding: 7px 10px; border: 1px solid var(--text); border-radius: 999px; background: #fff; }
+    .online i { animation: gdPulse 1.7s ease-in-out infinite; }
+    @keyframes gdPulse { 0%,100%{box-shadow:0 0 0 0 rgba(250,219,52,.45)} 50%{box-shadow:0 0 0 6px rgba(250,219,52,0)} }
+    .chat-body {
+      height: 360px !important;
+      min-height: 360px !important;
+      max-height: 360px !important;
+      overflow-y: auto !important;
+      overscroll-behavior: contain;
+      scroll-behavior: smooth;
+      padding: 20px 20px 24px !important;
+      background: linear-gradient(180deg, #fff 0%, rgba(230,231,231,.22) 100%);
+      scrollbar-width: thin;
+      scrollbar-color: var(--secondary) transparent;
+    }
+    .chat-body::-webkit-scrollbar { width: 9px; }
+    .chat-body::-webkit-scrollbar-track { background: transparent; }
+    .chat-body::-webkit-scrollbar-thumb { background: var(--secondary); border: 2px solid #fff; border-radius: 999px; }
+    .message { font-size: 11px !important; line-height: 1.55 !important; box-shadow: 0 3px 0 rgba(0,0,0,.04); }
+    .message.bot {
+      position: relative;
+      padding-left: 47px !important;
+      background: #fff !important;
+    }
+    .message.bot::before {
+      content: '';
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 27px;
+      height: 27px;
+      border-radius: 9px;
+      border: 1px solid var(--text);
+      background: #fff url('assets/logo.png') center/contain no-repeat;
+    }
+    .message.user {
+      background: var(--primary) !important;
+      box-shadow: 3px 4px 0 rgba(255,168,30,.45);
+    }
+    .typing { background: #fff !important; }
+    .chat-form { background: rgba(255,255,255,.96); }
+    .chat-form input { font-size: 11px !important; }
+    .send-btn { transition: transform .22s var(--ease), box-shadow .22s var(--ease), filter .22s var(--ease); }
+    .send-btn:hover { transform: translate(-2px,-2px) rotate(-1deg) !important; }
+
+    /* Future tools are visible now; their pages will be wired later. */
+    .nav-placeholder { cursor: pointer; }
+    .nav-placeholder::after { content: ''; }
+
+    @media (max-width: 1180px) and (min-width: 901px) {
+      .hero-home-copy { width: min(630px, 58%); }
+      .builder-head-side { flex-basis: 430px !important; min-width: 310px !important; }
+      .builder-cozy-art { width: min(470px, 100%) !important; max-height: 290px !important; }
+    }
+    @media (max-width: 900px) {
+      .hero-homepage {
+        height: auto !important;
+        min-height: 720px !important;
+        padding: 118px 0 58px !important;
+        background:
+          linear-gradient(180deg, rgba(255,255,255,.94) 0%, rgba(255,255,255,.78) 48%, rgba(255,255,255,.16) 100%),
+          url('assets/home-cozy-fall.png') 62% center / cover no-repeat !important;
+      }
+      .hero-home-copy { width: 100%; max-width: 620px; }
+      .hero-homepage .hero-brand-title { text-wrap: wrap; }
+      .builder-head-side { min-width: 0 !important; min-height: 0 !important; width: 100% !important; align-items: center !important; }
+      .builder-cozy-art { width: min(560px, 94vw) !important; max-height: 340px !important; margin-inline: auto !important; object-position: center !important; }
+      .moments-carousel-full { margin-left: 0 !important; width: 100% !important; }
+      .moments-carousel-full .moments-viewport { width: 100% !important; }
+      .moments-carousel-full .moments-prev { left: 12px !important; }
+      .moments-carousel-full .moments-next { right: 12px !important; }
+    }
+
+
+    /* GrooveDuck 1.12 — homepage cleanup, full-width moments and progress reward bar. */
+    body {
+      font-family: 'Alice', serif !important;
+    }
+    h1, h2, h3, h4, h5,
+    .brand-name,
+    .hero-brand-title,
+    .moment-card strong,
+    .tier-card h3,
+    .chat-id strong,
+    .window-title,
+    .kicker,
+    .nav-link,
+    .nav-cta,
+    .btn {
+      font-family: 'Bogart', 'Bree Serif', serif !important;
+      letter-spacing: 0 !important;
+    }
+
+    /* Homepage: remove the left fade and let the artwork really show through. */
+    .hero-homepage {
+      background: url('assets/home-cozy-fall.png') 60% center / cover no-repeat !important;
+    }
+    .hero-homepage::after {
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.03)) !important;
+    }
+    .hero-home-copy {
+      width: min(700px, 56%) !important;
+      padding: 24px 24px 22px !important;
+      border-radius: 28px !important;
+      background: rgba(255,255,255,.72) !important;
+      border: 1.5px solid rgba(0,0,0,.10) !important;
+      box-shadow: 0 18px 42px rgba(0,0,0,.08) !important;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .hero-homepage .hero-brand-title,
+    .hero-homepage .hero-copy,
+    .hero-homepage .hero-actions,
+    .hero-homepage .hero-proof {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Smoother, tighter controls site-wide. */
+    .btn,
+    .nav-cta,
+    .nav-link,
+    .mood-select,
+    .tier-cta,
+    .moments-arrow,
+    .gd-dropdown-trigger,
+    .generate,
+    .send-btn,
+    .segmented button {
+      transition:
+        transform .24s var(--ease-smooth),
+        box-shadow .24s var(--ease-smooth),
+        background-color .24s var(--ease-smooth),
+        border-color .24s var(--ease-smooth),
+        color .24s var(--ease-smooth),
+        filter .24s var(--ease-smooth) !important;
+    }
+    .btn,
+    .nav-cta,
+    .mood-select,
+    .tier-cta,
+    .gd-dropdown-trigger,
+    .generate,
+    .segmented button,
+    .moments-arrow {
+      border-radius: 16px !important;
+    }
+    .btn:hover,
+    .nav-cta:hover,
+    .tier-cta:hover,
+    .gd-dropdown-trigger:hover,
+    .generate:hover {
+      transform: translate(-1px, -2px) !important;
+      filter: saturate(1.02);
+    }
+    .mood-select,
+    .tier-cta {
+      font-size: 13px !important;
+      font-weight: 900 !important;
+      letter-spacing: .008em !important;
+    }
+    .mood-select b,
+    .tier-cta > span:last-child {
+      font-size: 21px !important;
+    }
+
+    /* Fast and Smart also receive the green button treatment. */
+    .mood-fast .mood-select,
+    .mood-smart .mood-select {
+      background: var(--green) !important;
+      color: #fff !important;
+      box-shadow: 0 4px 0 rgba(0,0,0,.14) !important;
+    }
+    .mood-fast .mood-select b,
+    .mood-smart .mood-select b {
+      color: #fff !important;
+    }
+
+    /* Make the mascot moments rail truly continue all the way to the right too. */
+    .moments-carousel-full {
+      width: calc(100vw + var(--sidebar-w) + 34px) !important;
+      margin-left: calc(-1 * (var(--sidebar-w) + 28px)) !important;
+      padding-right: 0 !important;
+    }
+    .moments-carousel-full .moments-viewport {
+      width: calc(100vw + var(--sidebar-w) + 34px) !important;
+    }
+    .moments-carousel-full .moments-rail {
+      padding-right: 34px !important;
+    }
+
+    /* Reward bar: white track, yellow fill based on scroll progress, and 10px lower. */
+    .scroll-progress {
+      top: 17px !important;
+    }
+    .scroll-rail {
+      --scroll-progress: 0%;
+    }
+    .scroll-rail::before {
+      background: #FFFFFF !important;
+    }
+    .scroll-rail::after {
+      display: block !important;
+      content: '' !important;
+      position: absolute !important;
+      left: 0 !important;
+      bottom: 13px !important;
+      width: var(--scroll-progress) !important;
+      max-width: 100% !important;
+      height: 10px !important;
+      background: var(--primary) !important;
+      border: 1.5px solid var(--text) !important;
+      border-radius: 999px !important;
+      box-shadow: 0 3px 0 rgba(0,0,0,.08) !important;
+      overflow: hidden !important;
+    }
+
+    @media (max-width: 1180px) and (min-width: 901px) {
+      .hero-homepage {
+        background-position: 62% center !important;
+      }
+      .hero-home-copy {
+        width: min(660px, 60%) !important;
+      }
+    }
+    @media (max-width: 900px) {
+      .hero-homepage {
+        background: url('assets/home-cozy-fall.png') 64% center / cover no-repeat !important;
+      }
+      .hero-home-copy {
+        width: 100% !important;
+        max-width: 640px !important;
+        background: rgba(255,255,255,.76) !important;
+      }
+      .moments-carousel-full,
+      .moments-carousel-full .moments-viewport {
+        width: 100% !important;
+      }
+      .scroll-progress {
+        top: 98px !important;
+      }
+    }
+    @media (max-width: 640px) {
+      .scroll-progress {
+        top: 90px !important;
+      }
+    }
+
+
+
+
+    /* GrooveDuck 1.13 — homepage cards, cleaned mood rail and aligned reward bar. */
+    body {
+      font-family: 'Alice', Georgia, serif !important;
+    }
+    h1, h2, h3, h4, h5,
+    .brand-name,
+    .hero-brand-title,
+    .moment-card strong,
+    .tier-card h3,
+    .chat-id strong,
+    .window-title,
+    .kicker,
+    .nav-link,
+    .nav-cta,
+    .btn {
+      font-family: 'Bogart', 'Cooper Black', 'Bree Serif', Georgia, serif !important;
+    }
+
+    .hero-homepage {
+      background: url('assets/home-cozy-fall.png') 68% center / cover no-repeat !important;
+    }
+    .hero-homepage::after {
+      background: none !important;
+    }
+    .hero-home-inner {
+      align-items: center !important;
+    }
+    .hero-home-copy {
+      width: min(560px, 42%) !important;
+      padding: 0 !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      background: transparent !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      display: grid !important;
+      gap: 14px !important;
+    }
+    .hero-card {
+      background: rgba(255,255,255,.95) !important;
+      border: 1.5px solid rgba(0,0,0,.12) !important;
+      border-radius: 26px !important;
+      box-shadow: 0 16px 34px rgba(0,0,0,.08) !important;
+      padding: 18px 22px !important;
+      backdrop-filter: blur(6px) !important;
+      -webkit-backdrop-filter: blur(6px) !important;
+    }
+    .hero-card-title { padding: 18px 22px 16px !important; }
+    .hero-card-copy { padding: 16px 22px !important; }
+    .hero-card-actions { padding: 14px 18px !important; }
+    .hero-homepage .hero-brand-title {
+      margin: 0 !important;
+      font-size: clamp(74px, 7.2vw, 112px) !important;
+      line-height: .85 !important;
+      text-wrap: balance !important;
+      letter-spacing: -.03em !important;
+    }
+    .hero-homepage .hero-brand-title span {
+      display: block;
+    }
+    .hero-homepage .hero-copy {
+      margin: 0 !important;
+      max-width: none !important;
+      font-size: clamp(16px, 1.08vw, 18px) !important;
+      line-height: 1.62 !important;
+    }
+    .hero-homepage .hero-actions {
+      margin: 0 !important;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .hero-homepage .hero-actions .btn {
+      min-height: 54px !important;
+    }
+    .hero-homepage .hero-proof {
+      margin-top: 2px !important;
+      padding: 10px 14px !important;
+      width: fit-content;
+      max-width: 100%;
+      border-radius: 999px !important;
+      background: rgba(255,255,255,.88) !important;
+      border: 1.5px solid rgba(0,0,0,.10) !important;
+      box-shadow: 0 10px 22px rgba(0,0,0,.06) !important;
+    }
+
+    .mood-select,
+    .tier-cta,
+    .tier-fast .tier-cta,
+    .tier-smart .tier-cta,
+    .tier-medium .tier-cta,
+    .tier-premium .tier-cta {
+      background: var(--green) !important;
+      color: #fff !important;
+    }
+    .mood-select {
+      border-color: rgba(0,0,0,.9) !important;
+      box-shadow: 3px 4px 0 rgba(0,0,0,.92) !important;
+    }
+    .mood-select b { color: #fff !important; }
+    .tier-cta:hover,
+    .tier-fast .tier-cta:hover,
+    .tier-smart .tier-cta:hover,
+    .tier-medium .tier-cta:hover,
+    .tier-premium .tier-cta:hover,
+    .mood-select:hover {
+      background: #274832 !important;
+      color: #fff !important;
+    }
+
+    #momentsPrev,
+    #momentsNext,
+    .moments-arrow {
+      display: none !important;
+    }
+    .moments-carousel {
+      padding-inline: 0 !important;
+    }
+    .moments-carousel-full .moments-viewport {
+      width: calc(100vw + var(--sidebar-w) + 34px) !important;
+    }
+    .moments-carousel-full .moments-rail {
+      padding-right: 34px !important;
+    }
+
+    .scroll-progress {
+      top: 27px !important;
+    }
+    .scroll-rail {
+      --scroll-progress: 0%;
+      height: 80px !important;
+      overflow: visible !important;
+    }
+    .scroll-rail::before,
+    .scroll-rail::after {
+      content: '' !important;
+      position: absolute !important;
+      left: 0 !important;
+      bottom: 12px !important;
+      border-radius: 999px !important;
+    }
+    .scroll-rail::before {
+      right: 0 !important;
+      height: 8px !important;
+      background: #fff !important;
+      border: 1.5px solid var(--text) !important;
+      box-shadow: 0 2px 0 rgba(0,0,0,.06) !important;
+      z-index: 1 !important;
+    }
+    .scroll-rail::after {
+      width: var(--scroll-progress) !important;
+      max-width: 100% !important;
+      height: 12px !important;
+      background: var(--primary) !important;
+      border: 1.5px solid var(--text) !important;
+      box-shadow: 0 2px 0 rgba(0,0,0,.06) !important;
+      z-index: 0 !important;
+    }
+    .scroll-duck {
+      bottom: 2px !important;
+      z-index: 2 !important;
+    }
+
+    @media (max-width: 1180px) {
+      .hero-homepage {
+        background-position: 70% center !important;
+      }
+      .hero-home-copy {
+        width: min(560px, 48%) !important;
+      }
+    }
+    @media (max-width: 900px) {
+      .hero-homepage {
+        background-position: 72% center !important;
+      }
+      .hero-home-copy {
+        width: min(640px, 100%) !important;
+      }
+      .hero-homepage .hero-brand-title {
+        font-size: clamp(62px, 14vw, 88px) !important;
+      }
+      .hero-homepage .hero-proof {
+        width: 100%;
+        border-radius: 20px !important;
+      }
+      .scroll-progress {
+        top: 24px !important;
+      }
+    }
+    @media (max-width: 640px) {
+      .hero-card-title,
+      .hero-card-copy,
+      .hero-card-actions {
+        padding-inline: 18px !important;
+      }
+      .hero-homepage .hero-actions {
+        flex-direction: column;
+      }
+      .hero-homepage .hero-actions .btn {
+        width: 100%;
+      }
+      .scroll-progress {
+        top: 22px !important;
+      }
+    }
+
+  
+
+    /* GrooveDuck 1.14 — small UI correction pass. */
+
+    /* Restore the earlier open homepage composition with a subtle readability fade. */
+    .hero-homepage {
+      background:
+        linear-gradient(90deg,
+          rgba(255,255,255,.82) 0%,
+          rgba(255,255,255,.70) 24%,
+          rgba(255,255,255,.42) 43%,
+          rgba(255,255,255,.12) 60%,
+          rgba(255,255,255,0) 72%),
+        url('assets/home-cozy-fall.png') 68% center / cover no-repeat !important;
+    }
+    .hero-homepage::after { background: none !important; }
+    .hero-home-copy {
+      width: min(680px, 54%) !important;
+      padding: 0 !important;
+      border: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      display: block !important;
+    }
+    .hero-card { display: contents !important; }
+    .hero-homepage .hero-brand-title {
+      margin: 0 !important;
+      font-size: clamp(78px, 8vw, 132px) !important;
+      line-height: .88 !important;
+      letter-spacing: -.02em !important;
+      text-wrap: nowrap !important;
+    }
+    .hero-homepage .hero-brand-title span { display: inline !important; }
+    .hero-homepage .hero-copy {
+      max-width: 610px !important;
+      margin-top: 28px !important;
+      font-size: clamp(16px, 1.18vw, 19px) !important;
+      line-height: 1.65 !important;
+      color: #111 !important;
+    }
+    .hero-homepage .hero-actions {
+      margin-top: 28px !important;
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 12px !important;
+    }
+    .hero-homepage .hero-proof {
+      margin-top: 20px !important;
+      padding: 0 !important;
+      width: auto !important;
+      max-width: 100% !important;
+      border: 0 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+
+    /* Cozy AI and Free tier return to white; all large CTA shadows stay black. */
+    .mood-select,
+    .tier-cta {
+      box-shadow: 4px 5px 0 #000 !important;
+    }
+    .mood-cozy .mood-select,
+    .tier-free .tier-cta {
+      background: #FFFFFF !important;
+      color: #000000 !important;
+    }
+    .mood-cozy .mood-select b,
+    .tier-free .tier-cta > span:last-child {
+      color: #000000 !important;
+    }
+    .mood-cozy .mood-select:hover,
+    .tier-free .tier-cta:hover {
+      background: var(--gray) !important;
+      color: #000000 !important;
+      box-shadow: 6px 7px 0 #000 !important;
+    }
+    .mood-fast .mood-select,
+    .mood-smart .mood-select,
+    .tier-medium .tier-cta,
+    .tier-premium .tier-cta {
+      background: var(--green) !important;
+      color: #FFFFFF !important;
+    }
+    .mood-fast .mood-select:hover,
+    .mood-smart .mood-select:hover,
+    .tier-medium .tier-cta:hover,
+    .tier-premium .tier-cta:hover {
+      background: #274832 !important;
+      box-shadow: 6px 7px 0 #000 !important;
+    }
+
+    /* One perfectly aligned progress rail: yellow fill directly on top of the white track. */
+    .scroll-rail::before,
+    .scroll-rail::after {
+      left: 0 !important;
+      bottom: 12px !important;
+      height: 10px !important;
+      border: 1.5px solid var(--text) !important;
+      border-radius: 999px !important;
+      box-shadow: 0 2px 0 rgba(0,0,0,.06) !important;
+    }
+    .scroll-rail::before {
+      right: 0 !important;
+      width: auto !important;
+      background: #FFFFFF !important;
+      z-index: 0 !important;
+    }
+    .scroll-rail::after {
+      display: block !important;
+      width: var(--scroll-progress) !important;
+      max-width: 100% !important;
+      background: var(--primary) !important;
+      z-index: 1 !important;
+    }
+    .scroll-duck { z-index: 2 !important; }
+
+    @media (max-width: 1180px) {
+      .hero-homepage {
+        background:
+          linear-gradient(90deg,
+            rgba(255,255,255,.84) 0%,
+            rgba(255,255,255,.70) 30%,
+            rgba(255,255,255,.30) 54%,
+            rgba(255,255,255,0) 74%),
+          url('assets/home-cozy-fall.png') 70% center / cover no-repeat !important;
+      }
+      .hero-home-copy { width: min(640px, 58%) !important; }
+    }
+    @media (max-width: 900px) {
+      .hero-homepage {
+        background:
+          linear-gradient(90deg,
+            rgba(255,255,255,.90) 0%,
+            rgba(255,255,255,.76) 48%,
+            rgba(255,255,255,.20) 78%,
+            rgba(255,255,255,0) 100%),
+          url('assets/home-cozy-fall.png') 72% center / cover no-repeat !important;
+      }
+      .hero-home-copy { width: min(640px, 100%) !important; }
+      .hero-homepage .hero-brand-title {
+        font-size: clamp(62px, 14vw, 90px) !important;
+        text-wrap: wrap !important;
+      }
+    }
+
+  </style>
 </head>
 <body>
   <div class="page-shell">
@@ -2910,52 +3899,20 @@
           </a>
 
           <ul class="nav-menu">
-            <li class="nav-item">
-              <button class="nav-link" type="button">Product
-                <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M7.5 2.5 4 6l3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
-              <div class="dropdown">
-                <div class="drop-head"><span>Build with GrooveDuck</span><span class="drop-badge">Preview</span></div>
-                <div class="drop-grid">
-                  <a class="drop-card" href="#builder">
-                    <span class="drop-icon"><svg viewBox="0 0 24 24"><path d="M5 7h14M5 12h9M5 17h12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
-                    <span class="drop-copy"><strong>Set Builder</strong><small>Turn your Rekordbox library into a set that flows.</small></span><span class="drop-arrow">→</span>
-                  </a>
-                  <a class="drop-card" href="#ai">
-                    <span class="drop-icon"><svg viewBox="0 0 24 24"><path d="M5 6h14v9H9l-4 3V6Z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9 10h.01M12 10h.01M15 10h.01" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
-                    <span class="drop-copy"><strong>Ask the Duck</strong><small>A DJ copilot that understands your current set.</small></span><span class="drop-arrow">→</span>
-                  </a>
-                  <a class="drop-card" href="#moments">
-                    <span class="drop-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
-                    <span class="drop-copy"><strong>Library Flow</strong><small>Energy, BPM and key in one calm visual system.</small></span><span class="drop-arrow">→</span>
-                  </a>
-                </div>
-              </div>
-            </li>
-
-            <li class="nav-item">
-              <button class="nav-link" type="button">Explore
-                <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M7.5 2.5 4 6l3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
-              <div class="dropdown">
-                <div class="drop-head"><span>The GrooveDuck world</span><span class="drop-badge">Cozy</span></div>
-                <div class="drop-grid">
-                  <a class="drop-card" href="#moments"><span class="drop-icon"><svg viewBox="0 0 24 24"><path d="M5 18c4-8 10-10 14-12M7 7c1 0 2 1 2 2s-1 2-2 2-2-1-2-2 1-2 2-2Z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span><span class="drop-copy"><strong>Mascot moods</strong><small>See GrooveDuck shift with every moment.</small></span><span class="drop-arrow">→</span></a>
-                  <a class="drop-card" href="#builder"><span class="drop-icon"><svg viewBox="0 0 24 24"><path d="M4 12h3l2-6 4 12 2-6h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="drop-copy"><strong>Energy journeys</strong><small>Shape the room without staring at a spreadsheet.</small></span><span class="drop-arrow">→</span></a>
-                  <a class="drop-card" href="#ai"><span class="drop-icon"><svg viewBox="0 0 24 24"><path d="M8 5h8l3 4-3 8H8L5 9l3-4Z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m9 12 2 2 4-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><span class="drop-copy"><strong>Mix guidance</strong><small>Simple suggestions when you want a second opinion.</small></span><span class="drop-arrow">→</span></a>
-                </div>
-              </div>
-            </li>
-
-            <li class="nav-item"><a class="nav-link" href="#builder">Demo</a></li>
-            <li class="nav-item"><a class="nav-link" href="#moments">Moods</a></li>
-            <li class="nav-item"><a class="nav-link" href="#pricing">Pricing</a></li>
+            <li class="nav-item"><a class="nav-link" href="#top"><span>Home</span><span class="nav-arrow" aria-hidden="true">→</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="#builder"><span>DJ Set Builder</span><span class="nav-arrow" aria-hidden="true">→</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="#ai"><span>GrooveDuck AI</span><span class="nav-arrow" aria-hidden="true">→</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="#moments"><span>Moods</span><span class="nav-arrow" aria-hidden="true">→</span></a></li>
             <li class="nav-item nav-soon" aria-disabled="true">
               <div class="nav-link cuekoala-link" role="note" aria-label="CueKoala coming soon">
                 <span class="cuekoala-name">CueKoala</span>
-                <span class="cue-tape">COMING SOON</span>
+                <span class="cue-tape cue-tape-a">COMING SOON</span>
+                <span class="cue-tape cue-tape-b">COMING SOON</span>
               </div>
             </li>
+            <li class="nav-item"><a class="nav-link nav-placeholder" href="#" data-placeholder-link="Stem Separator"><span>Stem Separator</span><span class="nav-arrow" aria-hidden="true">→</span></a></li>
+            <li class="nav-item"><a class="nav-link nav-placeholder" href="#" data-placeholder-link="Library"><span>Library</span><span class="nav-arrow" aria-hidden="true">→</span></a></li>
+            <li class="nav-item"><a class="nav-link nav-placeholder" href="#" data-placeholder-link="My Saved Sets"><span>My Saved Sets</span><span class="nav-arrow" aria-hidden="true">→</span></a></li>
           </ul>
 
           <div class="nav-actions">
@@ -2972,16 +3929,10 @@
     </div>
 
     <main id="top">
-      <section class="hero hero-v5">
-        <div class="container hero-grid hero-grid-v5">
-          <div class="hero-copy-wrap reveal visible">
-            <div class="eyebrow"><span class="eyebrow-dot"></span> Built for Rekordbox DJs</div>
+      <section class="hero hero-v5 hero-homepage">
+        <div class="container hero-home-inner">
+          <div class="hero-copy-wrap hero-home-copy reveal visible">
             <h1 class="hero-brand-title">GrooveDuck</h1>
-            <h2 class="hero-tagline">The Ideal Assistent For Every DJ</h2>
-            <div class="hero-slogan" aria-label="Find the groove. Build the set.">
-              <span>Find the <span class="scribble-word">groove.</span></span>
-              <span>Build the set.</span>
-            </div>
             <p class="hero-copy">Turn your Rekordbox library into a set that actually flows. GrooveDuck brings BPM, key and energy together in one friendly workflow — so you spend less time arranging and more time mixing.</p>
             <div class="hero-actions">
               <a class="btn primary" href="#builder">Try the set builder
@@ -2993,23 +3944,8 @@
               <span>REKORDBOX XML</span><i></i><span>HARMONIC FLOW</span><i></i><span>ENERGY CURVES</span>
             </div>
           </div>
-
-          <div class="mascot-stage reveal visible" id="mascotStage">
-            <div class="stage-label"><span class="stage-status"></span> GrooveDuck is mixing</div>
-            <div class="mascot-frame">
-              <div class="mascot-loop" aria-label="GrooveDuck DJ mascot mixing a set">
-                <img class="draw-frame mixing-frame is-active" data-mix-frame="1" src="assets/mixing-1.png" alt="GrooveDuck mixing frame one">
-                <img class="draw-frame mixing-frame" data-mix-frame="2" src="assets/mixing-2.png" alt="GrooveDuck mixing frame two">
-                <img class="draw-frame mixing-frame" data-mix-frame="3" src="assets/mixing-3.png" alt="GrooveDuck mixing frame three">
-              </div>
-            </div>
-            <div class="float-note note-one">KEY MATCH ✓</div>
-            <div class="float-note note-two">ENERGY +12%</div>
-            <div class="float-note note-three">124 → 128 BPM</div>
-          </div>
         </div>
       </section>
-
       <div class="marquee-wrap" aria-hidden="true">
         <div class="marquee">
           <span>REKORDBOX XML <b>✦</b> HARMONIC FLOW <b>✦</b> ENERGY CURVES <b>✦</b> ASK THE DUCK <b>✦</b> SET BUILDER <b>✦</b> REKORDBOX XML <b>✦</b> HARMONIC FLOW <b>✦</b> ENERGY CURVES <b>✦</b> ASK THE DUCK <b>✦</b> SET BUILDER <b>✦</b></span>
@@ -3022,7 +3958,7 @@
           <div class="section-head builder-section-head reveal">
             <div class="builder-head-copy"><span class="kicker">01 / The builder</span><h2>DJ software, without the cold dashboard.</h2></div>
             <div class="builder-head-side">
-              <img class="builder-cozy-art" src="assets/cozy-corner-sleeping.png" alt="GrooveDuck sleeping loudly in a cozy music corner">
+              <img class="builder-cozy-art" src="assets/cozy-corner-sleeping-quietly.png" alt="GrooveDuck sleeping quietly in a cozy music corner">
             </div>
           </div>
 
@@ -3178,7 +4114,7 @@
               <div class="ai-demo-row">
                 <div class="chat-card reveal">
                   <div class="chat-head">
-                    <div class="chat-id"><span class="chat-duck"></span><span><strong>GrooveDuck AI</strong><span id="chatMoodLabel">Easy mood · demo mode</span></span></div>
+                    <div class="chat-id"><span class="chat-duck"><img src="assets/logo.png" alt=""></span><span><strong>GrooveDuck AI</strong><span id="chatMoodLabel">Easy mood · demo mode</span></span></div>
                     <div class="online"><i></i> online</div>
                   </div>
                   <div class="chat-body" id="chatBody">
@@ -3206,16 +4142,16 @@
               <p>GrooveDuck stays recognizable, but changes pose with the moment: building, listening, celebrating, thinking, skating or fixing something that went wrong.</p>
             </div>
           </div>
-          <div class="moments-carousel" id="momentsCarousel">
-            <button class="moments-arrow moments-prev" id="momentsPrev" type="button" aria-label="Previous GrooveDuck mood">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12l7 7M8 12h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
+        </div>
+          <div class="moments-carousel moments-carousel-full" id="momentsCarousel">
             <div class="moments-viewport" id="momentsViewport">
               <div class="moments-rail" id="momentsRail" aria-label="GrooveDuck mascot moods">
                 <article class="moment-card tone-gray reveal"><img src="assets/computer.png" alt="GrooveDuck working on a laptop"><span>WORK MODE</span><strong>Building with you.</strong></article>
                 <article class="moment-card tone-primary reveal"><img src="assets/standing-music.png" alt="GrooveDuck listening to music"><span>LISTENING</span><strong>Following the groove.</strong></article>
                 <article class="moment-card tone-accent reveal"><img src="assets/vinyl.png" alt="GrooveDuck holding vinyl"><span>LIBRARY</span><strong>Crate energy.</strong></article>
+                <article class="moment-card tone-green reveal"><img src="assets/vinyl-listener-mode.png" alt="GrooveDuck next to a vinyl turntable"><span>VINYL / LISTENER MODE</span><strong>Locked into the groove.</strong></article>
                 <article class="moment-card tone-secondary reveal"><img src="assets/idea.png" alt="GrooveDuck with an idea"><span>IDEA</span><strong>Found a better route.</strong></article>
+                <article class="moment-card tone-primary reveal"><img src="assets/brainstorm-mode.png" alt="GrooveDuck brainstorming"><span>BRAINSTORM MODE</span><strong>New ideas incoming.</strong></article>
                 <article class="moment-card tone-gray reveal"><img src="assets/jump-happy.png" alt="GrooveDuck celebrating"><span>SUCCESS</span><strong>Set ready.</strong></article>
                 <article class="moment-card tone-accent reveal"><img src="assets/thinking.png" alt="GrooveDuck thinking"><span>THINKING</span><strong>One second…</strong></article>
                 <article class="moment-card tone-brown reveal"><img src="assets/sad.png" alt="GrooveDuck looking concerned"><span>ERROR</span><strong>Let’s fix that.</strong></article>
@@ -3223,15 +4159,12 @@
                 <article class="moment-card tone-green reveal"><img src="assets/dj-sunglasses-speakers.png" alt="GrooveDuck DJ with decks and speakers"><span>DJ MODE</span><strong>Turn it up.</strong></article>
                 <article class="moment-card tone-secondary reveal"><img src="assets/skateboard-duck-cutout.png" alt="GrooveDuck skateboarding"><span>SKATE MODE</span><strong>Keep moving.</strong></article>
                 <article class="moment-card tone-accent reveal"><img src="assets/fast.png" alt="Fast GrooveDuck running"><span>FAST MODE</span><strong>Quick fixes.</strong></article>
+                <article class="moment-card tone-secondary reveal"><img src="assets/vocal-hype-mode.png" alt="GrooveDuck in hype mode behind speakers"><span>VOCAL / HYPE MODE</span><strong>Bring the room up.</strong></article>
                 <article class="moment-card tone-green reveal"><img src="assets/smart.png" alt="Smart GrooveDuck reading books"><span>SMART MODE</span><strong>Think deeper.</strong></article>
                 <article class="moment-card tone-brown reveal"><img src="assets/standing.png" alt="GrooveDuck standing"><span>DEFAULT</span><strong>Ready when you are.</strong></article>
               </div>
             </div>
-            <button class="moments-arrow moments-next" id="momentsNext" type="button" aria-label="Next GrooveDuck mood">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7m7-7H6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
           </div>
-        </div>
       </section>
 
       <section class="pricing-section" id="pricing">
@@ -3823,7 +4756,7 @@
 
       momentsPrev?.addEventListener('click', () => nudge(1));
       momentsNext?.addEventListener('click', () => nudge(-1));
-      momentsCarousel.addEventListener('mouseenter', () => { hoverPaused = true; });
+      momentsCarousel.addEventListener('mouseenter', () => { hoverPaused = false; });
       momentsCarousel.addEventListener('mouseleave', () => { hoverPaused = false; last = performance.now(); });
       momentsCarousel.addEventListener('focusin', () => { focusPaused = true; });
       momentsCarousel.addEventListener('focusout', () => { focusPaused = false; last = performance.now(); });
@@ -3866,6 +4799,7 @@
       const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
       const maxX = Math.max(0, scrollRail.clientWidth - scrollDuck.clientWidth);
       scrollDuck.style.transform = `translateX(${maxX * progress}px)`;
+      scrollRail.style.setProperty('--scroll-progress', `${progress * 100}%`);
     }
     updateScrollDuck();
     if (scrollDuck) scrollDuck.addEventListener('load', updateScrollDuck);
